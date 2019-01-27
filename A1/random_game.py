@@ -14,12 +14,8 @@ def rock_paper_scissors():
 
 def random_generator(guess):
     generated = random.randint(0, 2)
-    if generated == 0:
-        computer = 'rock'
-    elif generated == 1:
-        computer = 'paper'
-    elif generated == 2:
-        computer = 'scissors'
+    choices = ('rock', 'paper', 'scissors')
+    computer = choices[generated]  # Referencing a nested list (list within a list)
     guess_vs_computer(guess, computer)
 
 
