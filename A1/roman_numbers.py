@@ -1,6 +1,17 @@
 def convert_to_roman_numeral(positive_int):
-    print(thousands_conversion(positive_int) + hundreds_conversion(positive_int)
-          + tens_conversion(positive_int) + ones_conversion(positive_int))
+    if len(str(positive_int)) == 5:
+        print(thousands_conversion(positive_int))
+    elif len(str(positive_int)) == 4:
+        print(thousands_conversion(positive_int) + hundreds_conversion(positive_int)
+              + tens_conversion(positive_int) + ones_conversion(positive_int))
+    elif len(str(positive_int)) == 3:
+        print(hundreds_conversion(positive_int) + tens_conversion(positive_int) + ones_conversion(positive_int))
+    elif len(str(positive_int)) == 2:
+        print(tens_conversion(positive_int) + ones_conversion(positive_int))
+    elif len(str(positive_int)) == 1:
+        print(ones_conversion(positive_int))
+    elif positive_int == 0:
+        print('0')
 
 
 def ones_conversion(positive_int):
@@ -63,7 +74,7 @@ def thousands_conversion(positive_int):
 
 
 def main():
-    convert_to_roman_numeral(4994)
+    convert_to_roman_numeral(44)
 
 
 if __name__ == '__main__':
