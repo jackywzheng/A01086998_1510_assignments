@@ -1,3 +1,10 @@
+"""Mix two primary colours to generate a secondary colour."""
+
+# Jacky Zheng
+# A01086998
+# 01/30/19
+
+
 def colour_mixer():
     """Print the secondary colour given two primary colours.
 
@@ -8,8 +15,10 @@ def colour_mixer():
 
     colour_1 = input('What is your first primary colour? (red, blue, or yellow)')
     colour_1 = colour_1.lower()
+    colour_1 = colour_1.strip()
     colour_2 = input('What is your second primary colour? (red, blue, or yellow)')
     colour_2 = colour_2.lower()
+    colour_2 = colour_2.strip()
 
     if colour_1 == 'red' and colour_2 == 'blue' or colour_1 == 'blue' and colour_2 == 'red':
         print('Your secondary colour is purple!')
