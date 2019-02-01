@@ -4,6 +4,8 @@
 # A01086998
 # 01/30/19
 
+import doctest
+
 
 def compound_interest(p, r, n, t):
     """Calculate the amount of money under the effects of compound interest given the original principal amount, annual
@@ -13,6 +15,10 @@ def compound_interest(p, r, n, t):
     r = the annual interest rate
     n = the number of times per year that the interest is compounded
     t = the specified number of years
+
+    >>> compound_interest(50000, 0.1, 2, 10)
+    132664.88525722112
+
     PARAM: p, a positive float or integer
     PARAM: r, a positive float or integer
     PARAM: n, a positive float or integer  # Note that 10% is 0.10, not 10.0
@@ -29,6 +35,7 @@ def compound_interest(p, r, n, t):
 
 def main():
     print(compound_interest(50000, 0.1, 2, 10))
+    doctest.testmod()
 
 
 if __name__ == '__main__':

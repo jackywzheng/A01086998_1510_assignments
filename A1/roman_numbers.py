@@ -4,10 +4,19 @@
 # A01086998
 # 01/30/19
 
+import doctest
+
+
 def convert_to_roman_numeral(positive_int):
     """Convert integer to Roman numeral.
-    PARAM: positive_int, an integer in the range of [0, 10000]
-    PRECONDITION: positive_int must be an integer in the range of [0, 10000]
+
+    >>> convert_to_roman_numeral(1)
+    'I'
+    >>> convert_to_roman_numeral(9999)
+    'MMMMMMMMMCMXCIX'
+
+    PARAM: positive_int, an integer in the range of [1, 10000]
+    PRECONDITION: positive_int must be an integer in the range of [1, 10000]
     POSTCONDITION: converts the integer to the equivalent Roman numeral
     RETURN: converted integer as Roman numeral"""
     # Have to use if and elif statements to avoid index out of range error
@@ -27,7 +36,13 @@ def convert_to_roman_numeral(positive_int):
 
 
 def ones_conversion(positive_int):
-    """Convert the ones place of an integer to Roman numeral."
+    """Convert the ones place of an integer to Roman numeral.
+
+    >>> ones_conversion(4)
+    'IV'
+    >>> ones_conversion(9)
+    'IX'
+
     PARAM: positive_int[-1], an integer in the range of [0, 9]
     PRECONDITION: positive_int[-1] must be an integer in the range of [0, 9]
     POSTCONDITION: converts the ones place integer to the Roman numeral
@@ -51,7 +66,13 @@ def ones_conversion(positive_int):
 
 
 def tens_conversion(positive_int):
-    """Convert the tens place of an integer to Roman numeral."
+    """Convert the tens place of an integer to Roman numeral.
+
+    >>> tens_conversion(40)
+    'XL'
+    >>> tens_conversion(90)
+    'XC'
+
     PARAM: positive_int[-2], an integer in the range of [0, 9]
     PRECONDITION: positive_int[-2] must be an integer in the range of [0, 9]
     POSTCONDITION: converts the tens place integer to the Roman numeral
@@ -75,7 +96,13 @@ def tens_conversion(positive_int):
 
 
 def hundreds_conversion(positive_int):
-    """Convert the hundreds place of an integer to Roman numeral."
+    """Convert the hundreds place of an integer to Roman numeral.
+
+    >>> hundreds_conversion(400)
+    'CD'
+    >>> hundreds_conversion(900)
+    'CM'
+
     PARAM: positive_int[-3], an integer in the range of [0, 9]
     PRECONDITION: positive_int[-3] must be an integer in the range of [0, 9]
     POSTCONDITION: converts the hundreds place integer to the Roman numeral
@@ -98,7 +125,13 @@ def hundreds_conversion(positive_int):
 
 
 def thousands_conversion(positive_int):
-    """Convert the thousands place of an integer to Roman numeral."
+    """Convert the thousands place of an integer to Roman numeral.
+
+    >>> thousands_conversion(4000)
+    'MMMM'
+    >>> thousands_conversion(9000)
+    'MMMMMMMMM'
+
     PARAM: positive_int[-4], an integer in the range of [0, 10]
     PRECONDITION: positive_int[-4] must be an integer in the range of [0, 10]
     POSTCONDITION: converts the thousands place integer to the Roman numeral
@@ -108,7 +141,8 @@ def thousands_conversion(positive_int):
 
 
 def main():
-    print(convert_to_roman_numeral(6767))
+    print(convert_to_roman_numeral(9999))
+    doctest.testmod()
 
 
 if __name__ == '__main__':
