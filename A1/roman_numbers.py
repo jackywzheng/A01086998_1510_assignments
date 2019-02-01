@@ -127,17 +127,20 @@ def hundreds_conversion(positive_int):
 def thousands_conversion(positive_int):
     """Convert the thousands place of an integer to Roman numeral.
 
-    >>> thousands_conversion(4000)
-    'MMMM'
-    >>> thousands_conversion(9000)
-    'MMMMMMMMM'
+    >>> thousands_conversion(1000)
+    'M'
+    >>> thousands_conversion(10000)
+    'MMMMMMMMMM'
 
     PARAM: positive_int[-4], an integer in the range of [0, 10]
     PRECONDITION: positive_int[-4] must be an integer in the range of [0, 10]
     POSTCONDITION: converts the thousands place integer to the Roman numeral
     RETURN: converted thousands place of an integer as Roman numeral"""
     positive_int = str(positive_int)
-    return 'M' * int(positive_int[-4])  # This one's easy as there are no special rules for thousands in Roman numeral
+    if int(positive_int[-4]) > 0:  # If the thousands place has anything greater than 0, return M multiplied by value
+        return 'M' * int(positive_int[-4])
+    elif int(positive_int) == 10000:  # If the input is 10,000 then it will return 'M' * 10, the maximum value
+        return 'M' * 10
 
 
 def main():
