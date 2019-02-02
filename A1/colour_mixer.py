@@ -24,17 +24,16 @@ def colour_mixer():
 def colour_mixer_helper(colour_1, colour_2):
     """Print the secondary colour given two primary colours.
 
-    >>> colour_mixer_helper('red', 'blue')
-    'Your secondary colour is purple!'
-    >>> colour_mixer_helper('red', 'red')
-    'You did not pick two primary colours, or you picked the same colour!'
-
     PARAM: colour_1, 'red', 'blue', or 'yellow'
     PARAM: colour_2, 'red', 'blue', or 'yellow'
     PRECONDITION: colour_1 must be 'red', 'blue', or 'yellow'
     PRECONDITION: colour_1 must be 'red', 'blue', or 'yellow'
-    RETURN: the secondary colour of two primary colours or an error message"""
-
+    RETURN: the secondary colour of two primary colours or an error message
+    >>> colour_mixer_helper('red', 'blue')
+    'Your secondary colour is purple!'
+    >>> colour_mixer_helper('red', 'red')
+    'You did not pick two primary colours, or yo u picked the same colour!'
+    """
     if colour_1 == 'red' and colour_2 == 'blue' or colour_1 == 'blue' and colour_2 == 'red':
         return 'Your secondary colour is purple!'
     elif colour_1 == 'blue' and colour_2 == 'yellow' or colour_1 == 'yellow' and colour_2 == 'blue':

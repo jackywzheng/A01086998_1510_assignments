@@ -23,11 +23,13 @@ def rock_paper_scissors():
 
 def random_generator(guess):
     """Generate a random integer and assign computer's choice to it."
-    # Don't know how to DOCTEST this function
+
+    # Also passes guess into another function
     PARAM: guess, a string as 'rock', 'paper', or 'scissors'
     PRECONDITION: must be a string as 'rock', 'paper', or 'scissors'
     POSTCONDITION: assigns the computer's choice to the same random number and passes the computer's choice
-    and the user's choice to the guess_computer function for comparison"""
+    and the user's choice to the guess_computer function for comparison
+    """
     generated = random.randint(0, 2)  # Generate a random integer in the range of [0, 2]
     if generated == 0:  # 0 will always be rock
         computer = 'rock'
@@ -41,18 +43,18 @@ def random_generator(guess):
 def guess_vs_computer(guess, computer):
     """Compare the user's choice against the computer's choice and prints who won.
 
+    PARAM: guess, a string as 'rock', 'paper', or 'scissors'
+    PARAM: computer, a string as 'rock', 'paper', or 'scissors'
+    PRECONDITION: guess must be a string as 'rock', 'paper', or 'scissors'
+    PRECONDITION: computer must be a string as 'rock', 'paper', or 'scissors'
+    POSTCONDITION: prints the winner of the rock, paper, scissors game
     >>> guess_vs_computer('rock', 'scissors')
     'Computer picked scissors. You win :)'
     >>> guess_vs_computer('paper', 'scissors')
     'Computer picked scissors. You lose :('
     >>> guess_vs_computer('rock', 'rock')
     'Computer picked the same. You tied :/'
-
-    PARAM: guess, a string as 'rock', 'paper', or 'scissors'
-    PARAM: computer, a string as 'rock', 'paper', or 'scissors'
-    PRECONDITION: guess must be a string as 'rock', 'paper', or 'scissors'
-    PRECONDITION: computer must be a string as 'rock', 'paper', or 'scissors'
-    POSTCONDITION: prints the winner of the rock, paper, scissors game"""
+    """
     if guess == computer:
         return 'Computer picked the same. You tied :/'
     elif guess == 'rock' and computer == 'scissors':

@@ -10,15 +10,15 @@ import doctest
 def time_calculator(seconds):
     """Convert seconds to minutes, hours, and days in a list of integers.
 
+    PARAM: seconds, a positive integer
+    PRECONDITION: seconds must be a positive integer
+    POSTCONDITION: converts seconds to minutes, hours, and days
+    RETURN: an integer list that contains seconds and equivalent minutes, hours, and days
     >>> time_calculator(9999999)
     [115, 17, 46, 39]
     >>> time_calculator(222222)
     [2, 13, 43, 42]
-
-    PARAM: seconds, a positive integer
-    PRECONDITION: seconds must be a positive integer
-    POSTCONDITION: converts seconds to minutes, hours, and days
-    RETURN: an integer list that contains seconds and equivalent minutes, hours, and days"""
+    """
     seconds = int(seconds)
     days = seconds // 86400
     hours = seconds % 86400 // 3600

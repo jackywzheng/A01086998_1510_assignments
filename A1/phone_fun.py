@@ -9,8 +9,9 @@ import doctest
 
 def number_translator():
     """Return the telephone number with any alphabetical numbers translated into their numerical equivalent.
-    PRE-CONDITION: phone_number, user must input a string in the format of XXX-XXX-XXXX
-    POST-CONDITION: prints the phone number with all letters converted to numerical equivalent"""
+
+    PRECONDITION: phone_number, user must input a string in the format of XXX-XXX-XXXX
+    POSTCONDITION: prints the phone number with all letters converted to numerical equivalent"""
     phone_number = input('Enter a 10-character telephone number in the form of XXX-XXX-XXXX')
     phone_number = phone_number.lower()
     phone_number = phone_number.strip()
@@ -35,14 +36,14 @@ def number_translator():
 def letter_appender(letter):
     """Check if the letter is in a string and return the corresponding number or symbol.
 
+    PARAMETER: letter, a string in the range of [a, z]
+    PRECONDITION: letter, a string in the range of [a, z]
+    RETURN: corresponding number or symbol
     >>> letter_appender('a')
     '2'
     >>> letter_appender('z')
     '9'
-
-    PARAMETER: letter, a string in the range of [a, z]
-    PRE-CONDITION: letter, a string in the range of [a, z]
-    RETURN: corresponding number or symbol"""
+    """
     if letter in 'abc':  # You can do this instead of coding 'a' or 'b' or 'c'
         return '2'
     elif letter in 'def':
