@@ -17,6 +17,7 @@ def number_generator():
 
 
 def main():
+    """Drives the function."""
     print(number_generator())
 
 

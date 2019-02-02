@@ -144,6 +144,7 @@ def thousands_conversion(positive_int):
 
 
 def main():
+    """Drives the function."""
     print(convert_to_roman_numeral(9999))
     doctest.testmod()
 

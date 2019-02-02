@@ -46,6 +46,7 @@ def colour_mixer_helper(colour_1, colour_2):
 
 
 def main():
+    """Drives the function."""
     colour_mixer()
     doctest.testmod()
 

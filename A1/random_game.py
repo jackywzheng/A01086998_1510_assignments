@@ -70,6 +70,7 @@ def guess_vs_computer(guess, computer):
 
 
 def main():
+    """Drives the function."""
     rock_paper_scissors()
     doctest.testmod()
 

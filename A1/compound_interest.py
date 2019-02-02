@@ -34,7 +34,8 @@ def compound_interest(p, r, n, t):
 
 
 def main():
-    print(compound_interest(50000, 0.1, 2, 10))
+    """Drives the function."""
+    print(compound_interest(10, 0.01, 1, 1))
     doctest.testmod()
 
 

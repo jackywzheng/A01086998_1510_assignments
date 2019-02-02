@@ -64,6 +64,7 @@ def letter_appender(letter):
 
 
 def main():
+    """Drives the function."""
     number_translator()
     doctest.testmod()
 
