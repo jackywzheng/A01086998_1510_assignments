@@ -30,7 +30,7 @@ def time_calculator(seconds):
 
 def main():
     """Drives the function."""
-    print(time_calculator(0))
+    print(time_calculator())
     doctest.testmod()
 
 

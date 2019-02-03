@@ -30,8 +30,8 @@ def compound_interest(p, r, n, t):
     >>> compound_interest(50000, 0.1, 2, 10)
     132664.88525722112
     """
-    a = p * (1 + r / n) ** (n * t)
-    return a
+    a = float(p) * (1 + float(r) / int(n)) ** (int(n) * t)
+    return float(a)
 
 
 def main():
