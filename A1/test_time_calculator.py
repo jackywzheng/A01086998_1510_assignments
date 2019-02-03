@@ -1,3 +1,9 @@
+"""Unit test for time_calculator."""
+
+# Jacky Zheng
+# A01086998
+# 01/30/19
+
 from unittest import TestCase
 import time_calculator
 
@@ -14,3 +20,6 @@ class TestTimeCalculator(TestCase):
 
     def test_time_calculator_1_day_1_second(self):
         self.assertEqual([1, 0, 0, 1], time_calculator.time_calculator(86401))
+
+    def test_time_calculator_integer(self):
+        self.assertTrue(int, type(sum(time_calculator.time_calculator(86401))))

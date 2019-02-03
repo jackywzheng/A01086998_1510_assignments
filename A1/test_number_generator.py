@@ -1,3 +1,9 @@
+"""Unit test for lotto."""
+
+# Jacky Zheng
+# A01086998
+# 01/30/19
+
 from unittest import TestCase
 import lotto
 
