@@ -12,6 +12,6 @@ class TestCompoundInterest(TestCase):
     def test_compound_interest_large(self):
         self.assertEqual(3.881254963822318e+37, compound_interest.compound_interest(1000000, 5, 6, 20))
 
-    def test_compound_interest_large_float(self):
+    def test_compound_interest_float(self):
         self.assertTrue(float, compound_interest.compound_interest(1000, 0.5, 1, 20))
 
