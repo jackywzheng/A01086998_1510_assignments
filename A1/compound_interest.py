@@ -17,20 +17,19 @@ def compound_interest(p, r, n, t):
     r = the annual interest rate
     n = the number of times per year that the interest is compounded
     t = the specified number of years
-    PARAM: p, a positive float or integer
-    PARAM: r, a positive float or integer
-    PARAM: n, a positive float or integer  # Note that 10% is 0.10, not 10.0
-    PARAM: t, a positive float or integer
-    PRECONDITION: p must be a positive float or integer
-    PRECONDITION: r must be a positive float or integer
-    PRECONDITION: n must be a positive float or integer
-    PRECONDITION: t must be a positive float or integer
-    POSTCONDITION: calculates a, the amount of money in the account after being given the 4 parameters
-    RETURN: a, the amount of money in the account after the effects of compound interest
+    PARAM: p, a positive float
+    PARAM: r, a positive float
+    PARAM: n, an integer  # Note that 10% is 0.10, not 10.0
+    PARAM: t, an integer
+    PRECONDITION: p must be a positive float
+    PRECONDITION: r must be a positive float
+    PRECONDITION: n must be an integer
+    PRECONDITION: t must be an integer
+    RETURN: a, the amount of money in the account after compound interest
     >>> compound_interest(50000, 0.1, 2, 10)
     132664.88525722112
     """
-    a = float(p) * (1 + float(r) / int(n)) ** (int(n) * t)
+    a = float(p) * (1 + float(r) / int(n)) ** (int(n) * int(t))
     return float(a)
 
 
