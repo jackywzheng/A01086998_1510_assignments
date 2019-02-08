@@ -2,9 +2,10 @@
 
 # Jacky Zheng
 # A01086998
-# 02/04/2019
+# 02/07/2019
 
 import random
+import doctest
 
 
 def roll_die(number_of_rolls, number_of_sides):
@@ -12,7 +13,7 @@ def roll_die(number_of_rolls, number_of_sides):
 
     PRECONDITION: number_of_rolls must be a positive integer
     PRECONDITION: number_of_sides must be a positive integer
-    RETURN: sum of the rolls
+    RETURN: sum of the rolls as an integer
     """
     roll = random.randint(1, number_of_sides)  # Used recursion for this
     if number_of_rolls == 0:
@@ -45,10 +46,11 @@ def choose_inventory(inventory, selection):
 
 
 def generate_name(syllables):
-    """Generate a random name of requested length.
+    """Generate a random name with specified number of syllables.
 
+    PARAM: syllables, a positive integer
     PRECONDITION: the function will only work for positive non-zero integers
-    POSTCONDITION: prints a random name of requested length"""
+    RETURN: a random name of requested length as a string"""
     name = []
     for x in range(0, syllables):
         name.extend(generate_syllable())
@@ -56,15 +58,27 @@ def generate_name(syllables):
 
 
 def generate_vowel():
+    """Generate a random vowel, including 'y'
+
+    RETURN: a random vowel as a string
+    """
     return random.sample(['a', 'e', 'i', 'o', 'u', 'y'], 1)
 
 
 def generate_consonant():
+    """Generate a random consonant, including 'y'
+
+    RETURN: a random consonant as a string
+    """
     return random.sample(['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n',
                           'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'], 1)
 
 
 def generate_syllable():
+    """Combine a random vowel and consonant to form a syllable
+
+    RETURN: a random syllable as a string
+    """
     return generate_vowel() + generate_consonant()
 
 
@@ -72,7 +86,8 @@ def create_character(syllables):
     """Create a D&D character with randomly generated name and stats.
 
     PRECONDITION: name_length must be a positive integer
-    RETURN: list with name and stat rolls"""
+    RETURN: list with name and stat rolls
+    """
     character = {}
     character.update({'Name': generate_name(syllables)})
     character.update({'Class': classes()})
@@ -88,6 +103,11 @@ def create_character(syllables):
 
 
 def classes():
+    """Pick an available class.
+
+    PRECONDITION: must input one of the listed classes
+    RETURN: the selected class
+    """
     print("""Here are all the classes:
     barbarian, bard, cleric, druid, fighter, monk, paladin, ranger, rogue, sorcerer, warlock, wizard, blood hunter""")
     my_class = input('What class do you want to play as?')
@@ -101,6 +121,11 @@ def classes():
 
 
 def class_hp(my_class):
+    """Generate HP with appropriate class die.
+
+    PARAM: my_class, a string, an available class
+    PRECONDITION: my_class must be a string and an available class
+    RETURN: a dice roll as an integer, of the corresponding character dice"""
     class_dictionary = {'barbarian': roll_die(1, 12), 'bard': roll_die(1, 8), 'cleric': roll_die(1, 8),
                         'druid': roll_die(1, 8), 'fighter': roll_die(1, 10), 'monk': roll_die(1, 8),
                         'paladin': roll_die(1, 10), 'ranger': roll_die(1, 10), 'rogue': roll_die(1, 8),
@@ -122,9 +147,12 @@ def print_character(character):
 
 
 def combat_round(opponent_one, opponent_two):
-    """Simulate combat.
+    """Simulate combat with dice rolls and attribute checks.
 
+    PARAM: opponent_one, a well-formed dictionary with character stats
+    PARAM: opponent_two, a well-formed dictionary with character stats
     PRECONDITION: will not work unless both parameters are well-formed dictionaries each containing a correct character.
+    POSTCONDITION: prints the results of a simulated battle after dice rolls and attribute checks
     """
     opponent_one_strike = roll_die(1, 20)
     opponent_two_strike = roll_die(1, 20)
@@ -134,20 +162,20 @@ def combat_round(opponent_one, opponent_two):
         if opponent_one_strike > opponent_two['Dexterity']:
             opponent_two['HP'] -= class_hp(opponent_one['Class'])
             if opponent_two['HP'] <= 0:
-                print('Opponent two has died')
+                print('Enemy has died')
             else:
-                print('Opponent two now has', str(opponent_two['HP']), 'HP')
+                print('Enemy now has', str(opponent_two['HP']), 'HP')
         else:
-            print('Opponent one attack failed')
+            print('Your attack failed')
     elif opponent_two_strike > opponent_one_strike:
         if opponent_two_strike > opponent_one['Dexterity']:
             opponent_one['HP'] -= class_hp(opponent_two['Class'])
             if opponent_one['HP'] <= 0:
-                print('Opponent one has died')
+                print('You died')
             else:
-                print('Opponent one now has', str(opponent_one['HP']), 'HP')
+                print('You now have', str(opponent_one['HP']), 'HP')
         else:
-            print('Opponent two attack failed')
+            print('Enemy attack failed')
 
 
 def main():
@@ -157,6 +185,7 @@ def main():
     items = int(input('How many items do you want to start out with?'))
     character.update({'Inventory': choose_inventory(['sword', 'bow', 'staff', 'shield', 'potion', 'spear', 'boots']
                                                     , items)})
+    print('This is your character\'s stats')
     print_character(character)
     print('Let\'s simulate a fight between your character and another randomly generated character')
     combat_round(character, create_character(5))
