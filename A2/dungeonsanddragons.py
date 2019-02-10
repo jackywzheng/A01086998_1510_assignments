@@ -96,7 +96,7 @@ def create_character(syllables):
     character = {}
     character.update({'Name': generate_name(syllables)})
     character.update({'Class': classes()})
-    character.update({'HP': class_hp(character.get('Class'))})  # Get the value from class and pass it to class_hp
+    character.update({'HP': class_hp(character.get('Class'))})  # Get the value from Class key and pass it to class_hp
     character.update({'Strength': roll_die(3, 6)})
     character.update({'Dexterity': roll_die(3, 6)})
     character.update({'Constitution': roll_die(3, 6)})
@@ -185,16 +185,18 @@ def combat_round(opponent_one, opponent_two):
 
 
 def main():
-    length = int(input('How many syllables do you want your name to have?'))
-    character = create_character(length)
-    print("Here are some starting items: 'sword', 'bow', 'staff', 'shield', 'potion', 'spear', 'boots'")
-    items = int(input('How many items do you want to start out with?'))
-    character.update({'Inventory': choose_inventory(['sword', 'bow', 'staff', 'shield', 'potion', 'spear', 'boots']
-                                                    , items)})
-    print('This is your character\'s stats')
-    print_character(character)
-    print('Let\'s simulate a fight between your character and another randomly generated character')
-    combat_round(character, create_character(5))  # Must have user generate another character to fight against
+    # length = int(input('How many syllables do you want your name to have?'))
+    # character = create_character(length)
+    # print("Here are some starting items: 'sword', 'bow', 'staff', 'shield', 'potion', 'spear', 'boots'")
+    # items = int(input('How many items do you want to start out with?'))
+    # character.update({'Inventory': choose_inventory(['sword', 'bow', 'staff', 'shield', 'potion', 'spear', 'boots']
+    #                                                 , items)})
+    # print('This is your character\'s stats')
+    # print_character(character)
+    # print('Let\'s simulate a fight between your character and another randomly generated character')
+    # combat_round(character, create_character(5))  # Must have user generate another character to fight against
+    random.seed(1)
+    print(create_character(3))
 
 
 if __name__ == '__main__':

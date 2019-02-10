@@ -1,4 +1,4 @@
-"""Unit test for generate_vowel function."""
+"""Unit test for generate_syllable function."""
 
 # Jacky Zheng
 # A01086998
