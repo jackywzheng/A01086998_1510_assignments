@@ -18,7 +18,7 @@ class TestCreateCharacter(TestCase):
                          {'Name': 'Exalat', 'Class': 'druid', 'HP': 1, 'Strength': 11, 'Dexterity': 10,
                           'Constitution': 12, 'Intelligence': 10, 'Wisdom': 9, 'Charisma': 10, 'XP': 0})
 
-    @patch('dungeonsanddragons.classes', return_value='warrior')
+    @patch('dungeonsanddragons.classes', return_value='barbarian')
     def test_create_character_strength(self, mock_classes):
         character = dungeonsanddragons.create_character(1)
         self.assertTrue(3 <= character['Strength'] <= 18)

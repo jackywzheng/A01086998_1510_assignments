@@ -11,9 +11,9 @@ import dungeonsanddragons
 
 class TestClasses(TestCase):
     # If user inputs an available class, it will return the class
-    @patch('dungeonsanddragons.classes', return_value='warrior')
+    @patch('dungeonsanddragons.classes', return_value='barbarian')
     def test_classes_available_classes(self, mock_classes):
-        self.assertEqual(dungeonsanddragons.classes(), 'warrior')
+        self.assertEqual(dungeonsanddragons.classes(), 'barbarian')
 
     # If user inputs unavailable class, it will call the function over and over until an available class is inputted
     @patch('dungeonsanddragons.classes', return_value='ninja')
