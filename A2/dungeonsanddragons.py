@@ -163,7 +163,7 @@ def combat_round(opponent_one, opponent_two):
     opponent_one_strike = roll_die(1, 20)
     opponent_two_strike = roll_die(1, 20)
     if opponent_one_strike == opponent_two_strike:  # If both dice rolls are the same, execute function again
-        combat_round(opponent_one, opponent_two)
+        return combat_round(opponent_one, opponent_two)
     elif opponent_one_strike > opponent_two_strike:  # If your character roll is greater than opponent's
         if opponent_one_strike > opponent_two['Dexterity']:  # And also greater than their Dexterity stat
             opponent_two['HP'] -= class_hp(opponent_one['Class'])  # Replace opponent's HP value with the difference
