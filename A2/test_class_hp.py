@@ -9,6 +9,7 @@ import dungeonsanddragons
 
 
 class TestClassHP(TestCase):
+    # Only tested these 4 as there are only 4 unique dice values
     def test_class_hp_barbarian(self):
         self.assertTrue(1 <= dungeonsanddragons.class_hp('barbarian') <= 12)  # Barbarian is a d12
 

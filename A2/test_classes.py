@@ -6,16 +6,19 @@
 
 from unittest import TestCase
 from unittest.mock import patch
+import unittest
+import io
 import dungeonsanddragons
 
 
 class TestClasses(TestCase):
     # If user inputs an available class, it will return the class
-    @patch('dungeonsanddragons.classes', return_value='barbarian')
-    def test_classes_available_classes(self, mock_classes):
+    @patch('builtins.input', return_value='barbarian')
+    def test_classes_available_classes(self, input):
         self.assertEqual(dungeonsanddragons.classes(), 'barbarian')
 
     # If user inputs unavailable class, it will call the function over and over until an available class is inputted
-    @patch('dungeonsanddragons.classes', return_value='ninja')
-    def test_classes_unavailable_classes(self, mock_classes):
-        self.assertEqual(dungeonsanddragons.classes(), dungeonsanddragons.classes())
+    @patch('builtins.input', return_value='ninja')
+    def test_classes_unavailable_classes(self, input):
+        with self.assertRaises(RecursionError):
+            dungeonsanddragons.classes()
