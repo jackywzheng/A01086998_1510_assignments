@@ -48,8 +48,7 @@ class TestCreateCharacter(TestCase):
         character = dungeonsanddragons.create_character(1)
         self.assertTrue(3 <= character['Charisma'] <= 18)
 
-    @patch('dungeonsanddragons.classes', return_value='sorceror')
-    @patch('dungeonsanddragons.class_hp', return_value='sorceror')  # How to do this one? I want to test chara dice
-    def test_create_character_hp(self, mock_classes, mock_class_hp):
+    @patch('dungeonsanddragons.classes', return_value='sorcerer')
+    def test_create_character_hp(self, mock_classes):
         character = dungeonsanddragons.create_character(1)
         self.assertTrue(1 <= character['HP'] <= 6)
