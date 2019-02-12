@@ -176,11 +176,11 @@ def combat_round(opponent_one, opponent_two):
             opponent_two_attack(opponent_one, opponent_two)  # If they're still alive, call opponent_two_attack function
     elif opponent_two_strike > opponent_one_strike:
         print('Enemy strikes first')
-        opponent_two_attack(opponent_one, opponent_two)
-        if opponent_one['HP'] <= 0:
+        opponent_two_attack(opponent_one, opponent_two)  # Call opponent_two_attack function
+        if opponent_one['HP'] <= 0:  # If you die, then combat ends
             print('Combat ended')
         else:
-            opponent_one_attack(opponent_one, opponent_two)
+            opponent_one_attack(opponent_one, opponent_two)  # If you're still alive, call opponent_one_attack function
 
 
 def opponent_one_attack(opponent_one, opponent_two):
@@ -203,7 +203,7 @@ def opponent_one_attack(opponent_one, opponent_two):
         else:
             print('Enemy now has', opponent_two['HP'], 'HP')  # If enemy didn't die, then print remaining HP
     else:
-        print('You rolled a', dex_check_roll, 'and failed the Dexterity check.')  # Prints failed dexterity check roll
+        print('You rolled a', dex_check_roll, 'and failed the Dexterity check')  # Prints failed dexterity check roll
 
 
 def opponent_two_attack(opponent_one, opponent_two):
@@ -226,7 +226,7 @@ def opponent_two_attack(opponent_one, opponent_two):
         else:
             print('You now have', opponent_one['HP'], 'HP')
     else:
-        print('Enemy rolled a', dex_check_roll, 'and failed the Dexterity check.')
+        print('Enemy rolled a', dex_check_roll, 'and failed the Dexterity check')
 
 
 def main():
