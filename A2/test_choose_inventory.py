@@ -8,11 +8,12 @@ from unittest import TestCase
 import unittest.mock
 import io
 import dungeonsanddragons
+import random
 
 
 class TestChooseInventory(TestCase):
     def test_choose_inventory_selection_and_inventory_equal(self):
-        self.assertTrue(type(dungeonsanddragons.choose_inventory(['boots'], 1)) == list)
+        self.assertTrue(dungeonsanddragons.choose_inventory(['boots'], 1) == ['boots'])
 
     def test_choose_inventory_string(self):
         self.assertTrue(type(dungeonsanddragons.choose_inventory(['boots', 'sword', 'staff'], 2)[0]) == str)
@@ -41,3 +42,7 @@ class TestChooseInventory(TestCase):
         expected_output = 'You cannot select more than your inventory size!\n'
         dungeonsanddragons.choose_inventory(['boots'], 2)
         self.assertEqual(mock_stdout.getvalue(), expected_output)
+
+    def test_choose_inventory_sorted(self):
+        random.seed(1)
+        self.assertEqual(dungeonsanddragons.choose_inventory(['sword', 'boots', 'potion'], 2), ['potion', 'sword'])
