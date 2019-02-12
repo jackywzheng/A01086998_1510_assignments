@@ -122,7 +122,7 @@ def classes():
         return my_class
     else:
         print('That is not a class')
-        classes()  # If they don't pick a listed class, re-run the function until they do
+        return classes()  # If they don't pick a listed class, re-run the function until they do
 
 
 def class_hp(my_class):
@@ -161,27 +161,72 @@ def combat_round(opponent_one, opponent_two):
     POSTCONDITION: prints the results of a simulated battle after dice rolls and attribute checks
     """
     opponent_one_strike = roll_die(1, 20)
+    print('You rolled', opponent_one_strike)
     opponent_two_strike = roll_die(1, 20)
-    if opponent_one_strike == opponent_two_strike:  # If both dice rolls are the same, execute function again
+    print('Enemy rolled', opponent_two_strike)
+    if opponent_one_strike == opponent_two_strike:  # If both dice rolls are the same, call function again
+        print('Tie! Reroll')
         return combat_round(opponent_one, opponent_two)
     elif opponent_one_strike > opponent_two_strike:  # If your character roll is greater than opponent's
-        if opponent_one_strike > opponent_two['Dexterity']:  # And also greater than their Dexterity stat
-            opponent_two['HP'] -= class_hp(opponent_one['Class'])  # Replace opponent's HP value with the difference
-            if opponent_two['HP'] <= 0:  # If the HP is less than or equal to 0, then print death message
-                print('Enemy has died')
-            else:
-                print('Enemy now has', str(opponent_two['HP']), 'HP')  # If not, then print remaining HP
+        print('You strike first')
+        opponent_one_attack(opponent_one, opponent_two)  # Call opponent_one_attack function
+        if opponent_two['HP'] <= 0:  # If enemy dies, then combat ends
+            print('Combat ended.')
         else:
-            print('Your attack failed')  # If opponent's Dexterity is higher, than your attack failed
+            opponent_two_attack(opponent_one, opponent_two)  # If they're still alive, call opponent_two_attack function
     elif opponent_two_strike > opponent_one_strike:
-        if opponent_two_strike > opponent_one['Dexterity']:
-            opponent_one['HP'] -= class_hp(opponent_two['Class'])
-            if opponent_one['HP'] <= 0:
-                print('You died')
-            else:
-                print('You now have', str(opponent_one['HP']), 'HP')
+        print('Enemy strikes first')
+        opponent_two_attack(opponent_one, opponent_two)
+        if opponent_one['HP'] <= 0:
+            print('Combat ended')
         else:
-            print('Enemy attack failed')
+            opponent_one_attack(opponent_one, opponent_two)
+
+
+def opponent_one_attack(opponent_one, opponent_two):
+    """Simulate combat with opponent_one attacking opponent_two.
+
+    PARAM: opponent_one, a well-formed dictionary with character stats
+    PARAM: opponent_two, a well-formed dictionary with character stats
+    PRECONDITION: will not work unless both parameters are well-formed dictionaries each containing a correct character.
+    POSTCONDITION: prints the results of a simulated battle after dice rolls and attribute checks
+    RETURN: opponent_two's HP, only if it is <= 0
+    """
+    dex_check_roll = roll_die(1, 20)  # Roll a 1d20 to for Dexterity check
+    if dex_check_roll > opponent_two['Dexterity']:  # If greater than enemy Dexterity stat, do damage
+        damage = class_hp(opponent_one['Class'])  # Roll corresponding class die to determine damage
+        print('You rolled a', dex_check_roll, 'and passed the Dexterity check. You did', damage, 'damage')
+        opponent_two['HP'] -= damage  # Replace opponent's HP value with the difference
+        if opponent_two['HP'] <= 0:  # If the HP is less than or equal to 0, then print death message
+            print('Enemy has died')
+            return opponent_two['HP']  # Return HP so combat_round function knows whether combat has ended
+        else:
+            print('Enemy now has', opponent_two['HP'], 'HP')  # If enemy didn't die, then print remaining HP
+    else:
+        print('You rolled a', dex_check_roll, 'and failed the Dexterity check.')  # Prints failed dexterity check roll
+
+
+def opponent_two_attack(opponent_one, opponent_two):
+    """Simulate combat with opponent_two attacking opponent_one.
+
+    PARAM: opponent_one, a well-formed dictionary with character stats
+    PARAM: opponent_two, a well-formed dictionary with character stats
+    PRECONDITION: will not work unless both parameters are well-formed dictionaries each containing a correct character.
+    POSTCONDITION: prints the results of a simulated battle after dice rolls and attribute checks
+    RETURN: opponent_one's HP, only if it is <= 0
+    """
+    dex_check_roll = roll_die(1, 20)
+    if dex_check_roll > opponent_one['Dexterity']:
+        damage = class_hp(opponent_two['Class'])
+        print('Enemy rolled a', dex_check_roll, 'and passed the Dexterity check. They did', damage, 'damage')
+        opponent_one['HP'] -= damage
+        if opponent_one['HP'] <= 0:
+            print('You died')
+            return opponent_one['HP']
+        else:
+            print('You now have', opponent_one['HP'], 'HP')
+    else:
+        print('Enemy rolled a', dex_check_roll, 'and failed the Dexterity check.')
 
 
 def main():
@@ -194,7 +239,9 @@ def main():
     print('This is your character\'s stats')
     print_character(character)
     print('Let\'s simulate a fight between your character and another randomly generated character')
-    combat_round(character, create_character(5))  # Must have user generate another character to fight against
+    enemy = create_character(4)  # Have user create another character as an opponent
+    print_character(enemy)
+    combat_round(character, enemy)  # Must have user generate another character to fight against
 
 
 if __name__ == '__main__':
