@@ -171,7 +171,7 @@ def combat_round(opponent_one, opponent_two):
         print('You strike first')
         opponent_one_attack(opponent_one, opponent_two)  # Call opponent_one_attack function
         if opponent_two['HP'] <= 0:  # If enemy dies, then combat ends
-            print('Combat ended.')
+            print('Combat ended')
         else:
             opponent_two_attack(opponent_one, opponent_two)  # If they're still alive, call opponent_two_attack function
     elif opponent_two_strike > opponent_one_strike:
