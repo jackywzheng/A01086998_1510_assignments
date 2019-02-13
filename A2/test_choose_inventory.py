@@ -33,16 +33,17 @@ class TestChooseInventory(TestCase):
         dungeonsanddragons.choose_inventory(['boots'], -1)
         self.assertEqual(mock_stdout.getvalue(), expected_output)
 
-    def test_choose_inventory_larger_than_inventory(self):
+    def test_choose_inventory_larger_than_selection(self):
         self.assertEqual(dungeonsanddragons.choose_inventory(
             ['boots', 'sword'], 3), None)
 
     @unittest.mock.patch('sys.stdout', new_callable=io.StringIO)
-    def test_choose_inventory_larger_than_inventory_message(self, mock_stdout):
+    def test_choose_inventory_larger_than_selection_message(self, mock_stdout):
         expected_output = 'You cannot select more than your inventory size!\n'
         dungeonsanddragons.choose_inventory(['boots'], 2)
         self.assertEqual(mock_stdout.getvalue(), expected_output)
 
     def test_choose_inventory_sorted(self):
         random.seed(1)
-        self.assertEqual(dungeonsanddragons.choose_inventory(['sword', 'boots', 'potion'], 2), ['potion', 'sword'])
+        self.assertEqual(dungeonsanddragons.choose_inventory(['sword', 'boots', 'potion', 'axe', 'wand'], 4),
+                         ['axe', 'boots', 'sword', 'wand'])
