@@ -16,6 +16,6 @@ class TestGenerateSyllable(TestCase):
         syllable_vowel = dungeonsanddragons.generate_syllable()
         self.assertIn(syllable_vowel[0], 'aeiouy')
 
-    def test_generate_syllable_consonant(self):  # First letter is consonant.
+    def test_generate_syllable_consonant(self):  # Second letter is a consonant.
         syllable_consonant = dungeonsanddragons.generate_syllable()
         self.assertIn(syllable_consonant[1], 'bcdfghjklmnpqrstvwxyz')

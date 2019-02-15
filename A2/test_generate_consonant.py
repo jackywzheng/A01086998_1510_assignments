@@ -13,3 +13,7 @@ class TestGenerateConsonant(TestCase):
         self.assertIn(dungeonsanddragons.generate_consonant(), [['b'], ['c'], ['d'], ['f'], ['g'], ['h'], ['j'], ['k'],
                                                                 ['l'], ['m'], ['n'], ['p'], ['q'], ['r'], ['s'], ['t'],
                                                                 ['v'], ['w'], ['x'], ['y'], ['z']])
+
+    def test_generate_consonant_string(self):
+        consonant = dungeonsanddragons.generate_consonant()
+        self.assertTrue((type(consonant[0]) is str))
