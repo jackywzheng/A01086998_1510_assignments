@@ -1,4 +1,4 @@
-"""Unit test for roll_die function"""
+"""Unit test for roll_die function."""
 
 # Jacky Zheng
 # A01086998
