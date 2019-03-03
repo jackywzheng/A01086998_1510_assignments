@@ -33,12 +33,36 @@ def monster_encounter(player):
         combat_choice(player, enemy)  # Call combat_choice function
 
 
-def dungeon_map():
-    dungeon = []
-    for i in range(5):
-        dungeon.extend([["O"] * 5])  # Generate a 5x5 grid
+def dungeon_map(horizontal, vertical):
+    dungeon = [['O', 'O', 'O', 'O', 'O'],
+               ['O', 'O', 'O', 'O', 'O'],
+               ['O', 'O', 'X', 'O', 'O'],
+               ['O', 'O', 'O', 'O', 'O'],
+               ['O', 'O', 'O', 'O', 'O']]
+    dungeon[2+horizontal][2+vertical] = 'X'
     for row in dungeon:
-        print(row)  # Print
+        for column in row:
+            print(column, end=' ')  # Print
+        print()
+
+
+def movement_input():
+    direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
+                      "'w' for West, 's' for South. Type 'quit' to quit playing.")
+    direction.lower().strip()
+    if direction == 'n':
+        dungeon_map(-1, 0)
+    elif direction == 'e':
+        dungeon_map(0, 1)
+    elif direction == 'w':
+        dungeon_map(0, -1)
+    elif direction == 's':
+        dungeon_map(1, 0)
+    elif direction == 'quit':
+        pass
+    else:
+        print("That was not a valid input. Please enter a valid input.")
+        movement_input()
 
 
 def combat_choice(player, enemy):
@@ -66,14 +90,14 @@ def combat_round(player, enemy):
 
 
 def player_attack(enemy):
-        damage = roll_die(1, 6)  # Roll corresponding 1d6 to determine damage
-        print('You did', damage, 'damage')
-        enemy['HP'] -= damage  # Replace enemy's HP value with the difference
-        if enemy['HP'] <= 0:  # If the HP is less than or equal to 0, then print death message
-            print('Enemy has died')
-            return enemy['HP']  # Return HP so combat_round function knows whether combat has ended
-        else:
-            print('Enemy now has', enemy['HP'], 'HP')  # If enemy didn't die, then print remaining HP
+    damage = roll_die(1, 6)  # Roll corresponding 1d6 to determine damage
+    print('You did', damage, 'damage')
+    enemy['HP'] -= damage  # Replace enemy's HP value with the difference
+    if enemy['HP'] <= 0:  # If the HP is less than or equal to 0, then print death message
+        print('Enemy has died')
+        return enemy['HP']  # Return HP so combat_round function knows whether combat has ended
+    else:
+        print('Enemy now has', enemy['HP'], 'HP')  # If enemy didn't die, then print remaining HP
 
 
 def enemy_attack(player):
@@ -88,7 +112,7 @@ def enemy_attack(player):
 
 
 def main():
-    pass
+    movement_input()
 
 
 if __name__ == "__main__":
