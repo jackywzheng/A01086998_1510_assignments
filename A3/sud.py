@@ -47,6 +47,7 @@ def dungeon_map(horizontal, vertical, player):
         for column in row:
             print(column, end=' ')  # Print
         print()
+    character.hp_recovery(player)
     monster_encounter(player)
     movement_input(player)
 
@@ -83,7 +84,6 @@ def combat_choice(player, enemy):
             damage = roll_die(1, 4)
             player["HP"] -= damage
             print('You took', damage, 'damage')
-
     else:
         print("You did not type a valid input. Type 'yes' or 'no'.")
         combat_choice(player, enemy)  # Call the function again if player typed something else
@@ -136,10 +136,9 @@ def enemy_attack(player):
 
 
 def main():
-    # my_character = character.character()
-    # print("The X represents your current location. The O's represents available spaces to move into.")
-    # dungeon_map(0, 0, my_character)
-    combat_round({"Name": "Hacjyt", "HP": 10}, {'Name': 'Cthulu', 'HP': 5})
+    my_character = character.create_character()
+    print("The X represents your current location. The O's represents available spaces to move into.")
+    dungeon_map(0, 0, my_character)
 
 
 if __name__ == "__main__":

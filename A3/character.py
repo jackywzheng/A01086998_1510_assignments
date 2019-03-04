@@ -5,7 +5,7 @@
 # 02/26/2019
 
 
-def character():
+def create_character():
     my_name = input("What is your name?")
     my_name = my_name.strip().lower()
     my_character = {"Name": my_name, "HP": 10, "Class": classes(), "Horizontal": 2, "Vertical": 2}
@@ -30,3 +30,8 @@ def classes():
     else:
         print('That is not a class, please select one of the 4 classes')
         return classes()
+
+
+def hp_recovery(character):
+    if character["HP"] < 10:
+        character["HP"] += 1
