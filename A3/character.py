@@ -7,7 +7,9 @@
 
 def character():
     my_name = input("What is your name?")
-    my_character = {"Name": my_name, "HP": 10, "Class": classes()}
+    my_name = my_name.strip().lower()
+    my_character = {"Name": my_name, "HP": 10, "Class": classes(), "Horizontal": 2, "Vertical": 2}
+    print("Your name is", my_name, "\nYour class is", my_character["Class"])
     return my_character
 
 
@@ -22,9 +24,9 @@ def classes():
           "Berserker - Mad Warrior. Crazed warriors that "
           "have lost almost all traces of their sanity in exchange for great power. (Deal and take 2x damage)")
     my_class = input("What class do you want to play as?")
-    my_class.lower()
-    if my_class in "saber, archer, lancer, berserker":
-        return my_class
+    my_class = my_class.lower().strip()
+    if my_class in "saber,archer,lancer,berserker":
+        return my_class.title()
     else:
         print('That is not a class, please select one of the 4 classes')
-        classes()
+        return classes()

@@ -7,8 +7,6 @@
 
 def monster():
     enemy = {'Name': 'Cthulu', 'HP': 5}
-    for key, value in enemy:
-        print(key, value)
+    print("You have encountered Cthulu! It has 5 HP.")
     return enemy
-
 

@@ -33,47 +33,57 @@ def monster_encounter(player):
         combat_choice(player, enemy)  # Call combat_choice function
 
 
-def dungeon_map(horizontal, vertical):
+def dungeon_map(horizontal, vertical, player):
+    # Takes 3 parameters, horizontal movement, vertical movement, player position in form of dictionary
     dungeon = [['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
-               ['O', 'O', 'X', 'O', 'O'],
+               ['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O']]
-    dungeon[2+horizontal][2+vertical] = 'X'
+    player["Horizontal"] += horizontal
+    player["Vertical"] += vertical
+    dungeon[player["Horizontal"]][player["Vertical"]] = 'X'
     for row in dungeon:
         for column in row:
             print(column, end=' ')  # Print
         print()
+    monster_encounter(player)
+    movement_input(player)
 
 
-def movement_input():
-    direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
-                      "'w' for West, 's' for South. Type 'quit' to quit playing.")
-    direction.lower().strip()
-    if direction == 'n':
-        dungeon_map(-1, 0)
-    elif direction == 'e':
-        dungeon_map(0, 1)
-    elif direction == 'w':
-        dungeon_map(0, -1)
-    elif direction == 's':
-        dungeon_map(1, 0)
-    elif direction == 'quit':
-        pass
-    else:
-        print("That was not a valid input. Please enter a valid input.")
-        movement_input()
+def movement_input(player):
+    while True:
+        direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
+                          "'w' for West, 's' for South. Type 'quit' to quit playing.")
+        direction = direction.lower().strip()
+        if direction == 'n':
+            dungeon_map(-1, 0, player)
+        elif direction == 'e':
+            dungeon_map(0, 1, player)
+        elif direction == 'w':
+            dungeon_map(0, -1, player)
+        elif direction == 's':
+            dungeon_map(1, 0, player)
+        elif direction == 'quit':
+            break
+        else:
+            print("That was not a valid input. Please enter a valid input.")
+            movement_input(player)
 
 
 def combat_choice(player, enemy):
     choice = input("Do you wish to fight the monster? Type 'yes' to fight. Type 'no' to flee.")
     choice.lower().strip()
     if choice == 'yes':  # If player chooses to fight, execute combat_round function
+        print("The battle begins!")
         combat_round(player, enemy)
     elif choice == 'no':  # If player chooses to flee, roll a 1d10 to represent a 10% chance
         chance = roll_die(1, 10)
         if chance == 5:  # If it lands on a 5, player takes 1d4 damage
-            player["HP"] -= roll_die(1, 4)
+            damage = roll_die(1, 4)
+            player["HP"] -= damage
+            print('You took', damage, 'damage')
+
     else:
         print("You did not type a valid input. Type 'yes' or 'no'.")
         combat_choice(player, enemy)  # Call the function again if player typed something else
@@ -83,10 +93,22 @@ def combat_round(player, enemy):
     first_attack = roll_die(1, 2)  # Roll a 1d2, represents 50% chance of either character or enemy attacking first
     if first_attack == 1:  # If it's a 1, player attacks first
         print('You attack first')
-        player_attack(enemy)
+        while player["HP"] > 0:
+            player_attack(enemy)
+            if enemy['HP'] <= 0:  # If enemy dies, then combat ends
+                print('You have slain the monster')
+                return
+            else:
+                enemy_attack(player)  # Enemy attacks if still alive
     else:  # If it's a 2, enemy attacks first
         print('Enemy attacks first')
-        enemy_attack(player)
+        while enemy["HP"] > 0:
+            enemy_attack(player)
+            if player["HP"] <= 0:  # If player dies, then game over
+                print('Game over')
+                return
+            else:
+                player_attack(enemy)  # Player attacks if still alive
 
 
 def player_attack(enemy):
@@ -98,6 +120,7 @@ def player_attack(enemy):
         return enemy['HP']  # Return HP so combat_round function knows whether combat has ended
     else:
         print('Enemy now has', enemy['HP'], 'HP')  # If enemy didn't die, then print remaining HP
+        return enemy['HP']
 
 
 def enemy_attack(player):
@@ -108,11 +131,15 @@ def enemy_attack(player):
         print('You died')
         return player['HP']  # Return HP so combat_round function knows whether combat has ended
     else:
-        print('Enemy now has', player['HP'], 'HP')  # If you didn't die, then print remaining HP
+        print('You now have', player['HP'], 'HP')  # If you didn't die, then print remaining HP
+        return player['HP']
 
 
 def main():
-    movement_input()
+    # my_character = character.character()
+    # print("The X represents your current location. The O's represents available spaces to move into.")
+    # dungeon_map(0, 0, my_character)
+    combat_round({"Name": "Hacjyt", "HP": 10}, {'Name': 'Cthulu', 'HP': 5})
 
 
 if __name__ == "__main__":
