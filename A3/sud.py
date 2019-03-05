@@ -26,22 +26,23 @@ def roll_die(number_of_rolls, number_of_sides):
         return roll + roll_die(number_of_rolls - 1, number_of_sides)  # Subtract 1 roll and keep calling function
 
 
-def monster_encounter(player):
+def monster_encounter():
     chance = roll_die(1, 10)
     if chance == 5:  # If a 5 is rolled, spawn an enemy encounter. Represents a 10% chance.
-        enemy = monster.monster_picker()  # Spawn an enemy from the monster module
-        combat_choice(player, enemy)  # Call combat_choice function
+        return monster.monster_picker()  # Spawn an enemy from the monster module
     else:
-        character.hp_recovery(player)
+        return False
 
 
 def boss_encounter(player):
     if player["Horizontal"] == 4 and player["Vertical"] == 4:
-        print("You have found the Holy Grail! However, two strong monsters stand between you and the Holy Grail. "
-              "Defeat both to claim it and fulfill your wish!")
-        combat_choice(player, monster.satan())
-        combat_choice(player, monster.cthulu())
+        print("You have found the Holy Grail! However, a strong monster stands between you and the Holy Grail. "
+              "Defeat the monster to claim the Holy Grail and fulfill your wish!")
+        combat_round(player, monster.cthulu())
         input("You have found the Holy Grail! What is your wish?")
+        print("You take a drink from the Holy Grail in order for it to grant your wish, only to discover that\n"
+              "it's just watermelon juice. You feel cheated, but at least your thirst was quenched.")
+        quit()
 
 
 def dungeon_map(horizontal, vertical, player):
@@ -59,7 +60,7 @@ def dungeon_map(horizontal, vertical, player):
             print(column, end=' ')  # Print the map
         print()
     print("===========================================================================================================")
-    game_logic(player)
+    return game_logic(player)
 
 
 def movement_input(player):
@@ -68,18 +69,18 @@ def movement_input(player):
                           "'w' for West, 's' for South. Type 'quit' to quit playing.")
         direction = direction.lower().strip()
         if direction == 'n' and player["Horizontal"] != 0:  # Can only move North if not at top section
-            dungeon_map(-1, 0, player)
+            return dungeon_map(-1, 0, player)
         elif direction == 'e' and player["Vertical"] != 4:  # Can only move East if not at right-most section
-            dungeon_map(0, 1, player)
+            return dungeon_map(0, 1, player)
         elif direction == 'w' and player["Vertical"] != 0:  # Can only move West if not at left-most section
-            dungeon_map(0, -1, player)
+            return dungeon_map(0, -1, player)
         elif direction == 's' and player["Horizontal"] != 4:  # Can only move South if not at bottom section
-            dungeon_map(1, 0, player)
+            return dungeon_map(1, 0, player)
         elif direction == 'quit':  # End game if quit
-            quit()
+            break
         else:
             print("That was not a valid input, or you are trying to move out of the map. Please enter a valid input.")
-            movement_input(player)
+            return movement_input(player)
 
 
 def combat_choice(player, enemy):
@@ -89,11 +90,12 @@ def combat_choice(player, enemy):
         print("The battle begins!")
         combat_round(player, enemy)
     elif choice == 'no':  # If player chooses to flee, roll a 1d10 to represent a 10% chance
+        print("You have fled!")
         chance = roll_die(1, 10)
         if chance == 5:  # If it lands on a 5, player takes 1d4 damage
             damage = roll_die(1, 4)
             player["HP"] -= damage
-            print('You took', damage, 'damage')
+            print('You took', damage, 'damage while your back was turned!')
     else:
         print("You did not type a valid input. Type 'yes' or 'no'.")
         combat_choice(player, enemy)  # Call the function again if player typed something else
@@ -123,7 +125,7 @@ def combat_round(player, enemy):
 
 def player_attack(player, enemy):
     if player["Class"] == 'Berserker':
-        damage = roll_die(1, 12)  # If player is a Berserker, do double damage
+        damage = roll_die(1, 6) * 2  # If player is a Berserker, do double damage
     else:
         damage = roll_die(1, 6)  # If player is any other class, do regular damage
     print("===========================================================================================================")
@@ -139,7 +141,7 @@ def player_attack(player, enemy):
 
 def enemy_attack(player):
     if player["Class"] == 'Berserker':
-        damage = roll_die(1, 12)  # If player is a Berserker, take double damage
+        damage = roll_die(1, 6) * 2  # If player is a Berserker, take double damage
     else:
         damage = roll_die(1, 6)  # If player is any other class, take regular damage
     print("===========================================================================================================")
@@ -155,13 +157,17 @@ def enemy_attack(player):
 
 def game_logic(player):
     boss_encounter(player)
-    monster_encounter(player)
+    encounter = monster_encounter()
+    if encounter is False:
+        character.hp_recovery(player)
+    else:
+        combat_choice(player, encounter)
     character.character_status(player)
     movement_input(player)
 
 
 def main():
-    print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish. Navigate "
+    print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish.\nNavigate "
           "the dungeon, slaughter your enemies, find the Holy Grail, and make your wish come true!")
     my_character = character.create_character()
     print("The X represents your current location. The O's represents available spaces to move into.")

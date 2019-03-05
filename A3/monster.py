@@ -9,7 +9,7 @@ import random
 
 def cthulu():
     enemy = {'Name': 'Cthulu', 'HP': 6}
-    print("You have encountered a Great Old One, Cthulu! ^(;,;)^ It has 8 HP.")
+    print("You have encountered a Great Old One, Cthulu! ^(;,;)^ It has 15 HP.")
     return enemy
 
 
@@ -22,12 +22,6 @@ def slime():
 def werebear():
     enemy = {'Name': 'Werebear', 'HP': 5}
     print("You have encountered a fuzzy, but hungry werebear! ʕ•ᴥ•ʔ It has 5 HP.")
-    return enemy
-
-
-def satan():
-    enemy = {'Name': 'Satan', 'HP': 6}
-    print("You have encountered the Lord of Hell, Satan! ↜(╰ •ω•)╯ψ He has 8 HP.")
     return enemy
 
 
