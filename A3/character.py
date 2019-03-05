@@ -35,3 +35,8 @@ def classes():
 def hp_recovery(character):
     if character["HP"] < 10:
         character["HP"] += 1
+
+
+def character_status(character):
+    print("Name:", character["Name"], "          ", "Class:", character["Class"], "           ", "HP:", character["HP"])
+    print("===========================================================================================================")

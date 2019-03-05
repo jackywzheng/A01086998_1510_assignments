@@ -29,8 +29,19 @@ def roll_die(number_of_rolls, number_of_sides):
 def monster_encounter(player):
     chance = roll_die(1, 10)
     if chance == 5:  # If a 5 is rolled, spawn an enemy encounter. Represents a 10% chance.
-        enemy = monster.monster()  # Spawn an enemy from the monster module
+        enemy = monster.monster_picker()  # Spawn an enemy from the monster module
         combat_choice(player, enemy)  # Call combat_choice function
+    else:
+        character.hp_recovery(player)
+
+
+def boss_encounter(player):
+    if player["Horizontal"] == 4 and player["Vertical"] == 4:
+        print("You have found the Holy Grail! However, two strong monsters stand between you and the Holy Grail. "
+              "Defeat both to claim it and fulfill your wish!")
+        combat_choice(player, monster.satan())
+        combat_choice(player, monster.cthulu())
+        input("You have found the Holy Grail! What is your wish?")
 
 
 def dungeon_map(horizontal, vertical, player):
@@ -39,17 +50,16 @@ def dungeon_map(horizontal, vertical, player):
                ['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
-               ['O', 'O', 'O', 'O', 'O']]
-    player["Horizontal"] += horizontal
-    player["Vertical"] += vertical
-    dungeon[player["Horizontal"]][player["Vertical"]] = 'X'
+               ['O', 'O', 'O', 'O', 'O']]  # Represents the map
+    player["Horizontal"] += horizontal  # Update Horizontal position
+    player["Vertical"] += vertical  # Update Vertical position
+    dungeon[player["Horizontal"]][player["Vertical"]] = 'X'  # X represents current position
     for row in dungeon:
         for column in row:
-            print(column, end=' ')  # Print
+            print(column, end=' ')  # Print the map
         print()
-    character.hp_recovery(player)
-    monster_encounter(player)
-    movement_input(player)
+    print("===========================================================================================================")
+    game_logic(player)
 
 
 def movement_input(player):
@@ -57,18 +67,18 @@ def movement_input(player):
         direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
                           "'w' for West, 's' for South. Type 'quit' to quit playing.")
         direction = direction.lower().strip()
-        if direction == 'n':
+        if direction == 'n' and player["Horizontal"] != 0:  # Can only move North if not at top section
             dungeon_map(-1, 0, player)
-        elif direction == 'e':
+        elif direction == 'e' and player["Vertical"] != 4:  # Can only move East if not at right-most section
             dungeon_map(0, 1, player)
-        elif direction == 'w':
+        elif direction == 'w' and player["Vertical"] != 0:  # Can only move West if not at left-most section
             dungeon_map(0, -1, player)
-        elif direction == 's':
+        elif direction == 's' and player["Horizontal"] != 4:  # Can only move South if not at bottom section
             dungeon_map(1, 0, player)
-        elif direction == 'quit':
-            break
+        elif direction == 'quit':  # End game if quit
+            quit()
         else:
-            print("That was not a valid input. Please enter a valid input.")
+            print("That was not a valid input, or you are trying to move out of the map. Please enter a valid input.")
             movement_input(player)
 
 
@@ -94,7 +104,7 @@ def combat_round(player, enemy):
     if first_attack == 1:  # If it's a 1, player attacks first
         print('You attack first')
         while player["HP"] > 0:
-            player_attack(enemy)
+            player_attack(player, enemy)
             if enemy['HP'] <= 0:  # If enemy dies, then combat ends
                 print('You have slain the monster')
                 return
@@ -106,13 +116,17 @@ def combat_round(player, enemy):
             enemy_attack(player)
             if player["HP"] <= 0:  # If player dies, then game over
                 print('Game over')
-                return
+                quit()
             else:
-                player_attack(enemy)  # Player attacks if still alive
+                player_attack(player, enemy)  # Player attacks if still alive
 
 
-def player_attack(enemy):
-    damage = roll_die(1, 6)  # Roll corresponding 1d6 to determine damage
+def player_attack(player, enemy):
+    if player["Class"] == 'Berserker':
+        damage = roll_die(1, 12)  # If player is a Berserker, do double damage
+    else:
+        damage = roll_die(1, 6)  # If player is any other class, do regular damage
+    print("===========================================================================================================")
     print('You did', damage, 'damage')
     enemy['HP'] -= damage  # Replace enemy's HP value with the difference
     if enemy['HP'] <= 0:  # If the HP is less than or equal to 0, then print death message
@@ -124,7 +138,11 @@ def player_attack(enemy):
 
 
 def enemy_attack(player):
-    damage = roll_die(1, 6)  # Roll corresponding 1d6 to determine damage
+    if player["Class"] == 'Berserker':
+        damage = roll_die(1, 12)  # If player is a Berserker, take double damage
+    else:
+        damage = roll_die(1, 6)  # If player is any other class, take regular damage
+    print("===========================================================================================================")
     print('Enemy did', damage, 'damage')
     player['HP'] -= damage  # Replace character's HP value with the difference
     if player['HP'] <= 0:  # If the HP is less than or equal to 0, then print death message
@@ -135,7 +153,16 @@ def enemy_attack(player):
         return player['HP']
 
 
+def game_logic(player):
+    boss_encounter(player)
+    monster_encounter(player)
+    character.character_status(player)
+    movement_input(player)
+
+
 def main():
+    print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish. Navigate "
+          "the dungeon, slaughter your enemies, find the Holy Grail, and make your wish come true!")
     my_character = character.create_character()
     print("The X represents your current location. The O's represents available spaces to move into.")
     dungeon_map(0, 0, my_character)
