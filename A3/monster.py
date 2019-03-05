@@ -8,7 +8,7 @@ import random
 
 
 def cthulu():
-    enemy = {'Name': 'Cthulu', 'HP': 6}
+    enemy = {'Name': 'Cthulu', 'HP': 15}
     print("You have encountered a Great Old One, Cthulu! ^(;,;)^ It has 15 HP.")
     return enemy
 

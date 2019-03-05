@@ -60,27 +60,25 @@ def dungeon_map(horizontal, vertical, player):
             print(column, end=' ')  # Print the map
         print()
     print("===========================================================================================================")
-    return game_logic(player)
 
 
 def movement_input(player):
-    while True:
-        direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
-                          "'w' for West, 's' for South. Type 'quit' to quit playing.")
-        direction = direction.lower().strip()
-        if direction == 'n' and player["Horizontal"] != 0:  # Can only move North if not at top section
-            return dungeon_map(-1, 0, player)
-        elif direction == 'e' and player["Vertical"] != 4:  # Can only move East if not at right-most section
-            return dungeon_map(0, 1, player)
-        elif direction == 'w' and player["Vertical"] != 0:  # Can only move West if not at left-most section
-            return dungeon_map(0, -1, player)
-        elif direction == 's' and player["Horizontal"] != 4:  # Can only move South if not at bottom section
-            return dungeon_map(1, 0, player)
-        elif direction == 'quit':  # End game if quit
-            break
-        else:
-            print("That was not a valid input, or you are trying to move out of the map. Please enter a valid input.")
-            return movement_input(player)
+    direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
+                      "'w' for West, 's' for South. Type 'quit' to quit playing.")
+    direction = direction.lower().strip()
+    if direction == 'n' and player["Horizontal"] != 0:  # Can only move North if not at top section
+        return dungeon_map(-1, 0, player)
+    elif direction == 'e' and player["Vertical"] != 4:  # Can only move East if not at right-most section
+        return dungeon_map(0, 1, player)
+    elif direction == 'w' and player["Vertical"] != 0:  # Can only move West if not at left-most section
+        return dungeon_map(0, -1, player)
+    elif direction == 's' and player["Horizontal"] != 4:  # Can only move South if not at bottom section
+        return dungeon_map(1, 0, player)
+    elif direction == 'quit':  # End game if quit
+        quit()
+    else:
+        print("That was not a valid input, or you are trying to move out of the map. Please enter a valid input.")
+        return movement_input(player)  # Call function again if invalid input
 
 
 def combat_choice(player, enemy):
@@ -98,7 +96,7 @@ def combat_choice(player, enemy):
             print('You took', damage, 'damage while your back was turned!')
     else:
         print("You did not type a valid input. Type 'yes' or 'no'.")
-        combat_choice(player, enemy)  # Call the function again if player typed something else
+        return combat_choice(player, enemy)  # Call the function again if player typed something else
 
 
 def combat_round(player, enemy):
@@ -155,23 +153,21 @@ def enemy_attack(player):
         return player['HP']
 
 
-def game_logic(player):
-    boss_encounter(player)
-    encounter = monster_encounter()
-    if encounter is False:
-        character.hp_recovery(player)
-    else:
-        combat_choice(player, encounter)
-    character.character_status(player)
-    movement_input(player)
-
-
 def main():
     print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish.\nNavigate "
           "the dungeon, slaughter your enemies, find the Holy Grail, and make your wish come true!")
-    my_character = character.create_character()
+    player = character.create_character()
     print("The X represents your current location. The O's represents available spaces to move into.")
-    dungeon_map(0, 0, my_character)
+    dungeon_map(0, 0, player)
+    while True:
+        boss_encounter(player)
+        encounter = monster_encounter()
+        if encounter is False:
+            character.hp_recovery(player)
+        else:
+            combat_choice(player, encounter)
+        character.character_status(player)
+        movement_input(player)
 
 
 if __name__ == "__main__":
