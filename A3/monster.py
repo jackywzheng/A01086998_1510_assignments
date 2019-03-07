@@ -8,33 +8,28 @@ import random
 
 
 def cthulu():
-    enemy = {'Name': 'Cthulu', 'HP': 15}
     print("You have encountered a Great Old One, Cthulu! ^(;,;)^ It has 15 HP.")
-    return enemy
+    return {'Name': 'Cthulu', 'HP': 15}
 
 
 def slime():
-    enemy = {'Name': 'Slime', 'HP': 5}
     print("You have encountered a cute, but dangerous slime! (´･ω･`) It has 5 HP.")
-    return enemy
+    return {'Name': 'Slime', 'HP': 5}
 
 
 def werebear():
-    enemy = {'Name': 'Werebear', 'HP': 5}
     print("You have encountered a fuzzy, but hungry werebear! ʕ•ᴥ•ʔ It has 5 HP.")
-    return enemy
+    return {'Name': 'Werebear', 'HP': 5}
 
 
 def table_flipper():
-    enemy = {'Name': 'Table Flipper', 'HP': 5}
     print("You have encountered a table flipper! Don't get hit by his frustrations! (╯‵□′)╯︵┴─┴ It has 5 HP.")
-    return enemy
+    return {'Name': 'Table Flipper', 'HP': 5}
 
 
 def cat():
-    enemy = {'Name': 'Cat', 'HP': 5}
     print("You have encountered an adorable, but feisty cat! (=ↀωↀ=) It has 5 HP.")
-    return enemy
+    return {'Name': 'Cat', 'HP': 5}
 
 
 def monster_picker():
