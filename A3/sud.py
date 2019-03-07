@@ -7,6 +7,7 @@
 import random
 import monster
 import character
+import doctest
 
 
 def roll_die(number_of_rolls, number_of_sides):
@@ -17,6 +18,12 @@ def roll_die(number_of_rolls, number_of_sides):
     PRECONDITION: number_of_rolls must be a positive integer
     PRECONDITION: number_of_sides must be a positive integer
     RETURN: sum of the rolls as an integer
+
+    >>> random.seed(1)
+    >>> (roll_die(3, 6))
+    8
+    >>> (roll_die(0, 6))
+    0
     """
 
     roll = random.randint(1, number_of_sides)  # Used recursion for this
@@ -27,14 +34,31 @@ def roll_die(number_of_rolls, number_of_sides):
 
 
 def monster_encounter():
+    """Spawn a monster at a 10% chance.
+
+    RETURN: True if a monster is encountered, otherwise False
+
+    >>> random.seed(1)
+    >>> monster_encounter()
+    False
+    >>> random.seed(13)
+    >>> monster_encounter()
+    True
+    """
     chance = roll_die(1, 10)
     if chance == 5:  # If a 5 is rolled, spawn an enemy encounter. Represents a 10% chance.
-        return monster.monster_picker()  # Spawn an enemy from the monster module
+        return True
     else:
         return False
 
 
 def boss_encounter(player):
+    """Fight a boss monster and complete the game.
+
+    PARAM: player, a well-formed dictionary with player stats
+    PRECONDITION: player must be a well formed dictionary with player stats
+    POSTCONDITION: prints winning messages if boss is defeated
+    """
     if player["Horizontal"] == 4 and player["Vertical"] == 4:
         print("You have found the Holy Grail! However, a strong monster stands between you and the Holy Grail. "
               "Defeat the monster to claim the Holy Grail and fulfill your wish!")
@@ -46,6 +70,25 @@ def boss_encounter(player):
 
 
 def dungeon_map(horizontal, vertical, player):
+    """Print a map with available movement positions as an X and display current location as an X.
+
+    PARAM: horizontal, an integer between -1 and 1 inclusive
+    PARAM: vertical, an integer between -1 and 1 inclusive
+    PARAM: player, a well-formed dictionary with player stats
+    PRECONDITION: horizontal must be an integer between -1 and 1 inclusive
+    PRECONDITION: vertical must be an integer between -1 and 1 inclusive
+    PRECONDITION: player must be a well-formed dictionary with player stats
+    POSTCONDITION: prints a map that displays current player location
+
+    >>> dungeon_map(0, 0, {"Name": 'Jacky', "HP": 10, "Class": "Berserker", "Horizontal": 2, "Vertical": 2})
+     O O O O O
+     O O O O O
+     O O X O O
+     O O O O O
+     O O O O O
+    ===========================================================================================================
+
+    """
     # Takes 3 parameters, horizontal movement, vertical movement, player position in form of dictionary
     dungeon = [['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
@@ -57,12 +100,12 @@ def dungeon_map(horizontal, vertical, player):
     dungeon[player["Horizontal"]][player["Vertical"]] = 'X'  # X represents current position
     for row in dungeon:
         for column in row:
-            print(column, end=' ')  # Print the map
+            print('', column, end='')  # Print the map, must have blank space before or doctest will always fail
         print()
     print("===========================================================================================================")
 
 
-def movement_input(player):
+def movement_input(player):  # FIX THIS GAME LOGIC
     direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
                       "'w' for West, 's' for South. Type 'quit' to quit playing.")
     direction = direction.lower().strip()
@@ -100,6 +143,36 @@ def combat_choice(player, enemy):
 
 
 def combat_round(player, enemy):
+    """Simulate combat between two characters with dice rolls and attribute checks.
+    PARAM: player, a well-formed dictionary with character stats
+    PARAM: enemy, a well-formed dictionary with enemy stats
+    PRECONDITION: will not work unless both parameters are well-formed dictionaries each containing HP stats
+    POSTCONDITION: prints the results of a simulated battle after dice rolls
+
+    >>> random.seed(1)
+    >>> combat_round({"Name": 'Jacky', "HP": 10, "Class": "Berserker", "Horizontal": 2, "Vertical": 2}, \
+    {'Name': 'Slime', 'HP': 5})
+    You attack first
+    ===========================================================================================================
+    You did 6 damage
+    Enemy has died
+    You have slain the monster
+
+    >>> random.seed(2)
+    >>> combat_round({"Name": 'Jacky', "HP": 10, "Class": "Saber", "Horizontal": 2, "Vertical": 2}, \
+    {'Name': 'Slime', 'HP': 5})
+    You attack first
+    ===========================================================================================================
+    You did 1 damage
+    Enemy now has 4 HP
+    ===========================================================================================================
+    Enemy did 2 damage
+    You now have 8 HP
+    ===========================================================================================================
+    You did 6 damage
+    Enemy has died
+    You have slain the monster
+    """
     first_attack = roll_die(1, 2)  # Roll a 1d2, represents 50% chance of either character or enemy attacking first
     if first_attack == 1:  # If it's a 1, player attacks first
         print('You attack first')
@@ -122,6 +195,21 @@ def combat_round(player, enemy):
 
 
 def player_attack(player, enemy):
+    """Simulate combat when player attacks the enemy.
+
+    PARAM: player, a well-formed dictionary with character stats
+    PARAM: enemy, a well-formed dictionary with enemy stats
+    PRECONDITION: will not work unless both parameters are well-formed dictionaries each containing HP stats
+    POSTCONDITION: prints the results of the battle after dice rolls
+
+    >>> random.seed(1)
+    >>> player_attack({"Name": 'Jacky', "HP": 10, "Class": "Saber", "Horizontal": 2, "Vertical": 2}, \
+    {'Name': 'Slime', 'HP': 5})
+    ===========================================================================================================
+    You did 2 damage
+    Enemy now has 3 HP
+    3
+    """
     if player["Class"] == 'Berserker':
         damage = roll_die(1, 6) * 2  # If player is a Berserker, do double damage
     else:
@@ -138,6 +226,19 @@ def player_attack(player, enemy):
 
 
 def enemy_attack(player):
+    """Simulate combat when player gets attacked.
+
+    PARAM: player, a well-formed dictionary with character stats
+    PRECONDITION: player must be a well-formed dictionary with HP stat
+    POSTCONDITION: prints the results of the battle after dice rolls
+
+    >>> random.seed(1)
+    >>> enemy_attack({"Name": 'Jacky', "HP": 10, "Class": "Saber", "Horizontal": 2, "Vertical": 2})
+    ===========================================================================================================
+    Enemy did 2 damage
+    You now have 8 HP
+    8
+    """
     if player["Class"] == 'Berserker':
         damage = roll_die(1, 6) * 2  # If player is a Berserker, take double damage
     else:
@@ -165,10 +266,11 @@ def main():
         if encounter is False:
             character.hp_recovery(player)
         else:
-            combat_choice(player, encounter)
+            combat_choice(player, monster.monster_picker)
         character.character_status(player)
         movement_input(player)
 
 
 if __name__ == "__main__":
     main()
+    doctest.testmod()
