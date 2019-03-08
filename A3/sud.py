@@ -52,6 +52,22 @@ def monster_encounter():
         return False
 
 
+def boss_hint(player):
+    """Print a helpful hint.
+
+    PARAM: player, a well-formed dictionary with player stats
+    PRECONDITION: player must be a well formed dictionary with player stats
+    POSTCONDITION: prints a helpful hint.
+
+    >>> boss_hint({"Name": 'Jacky', "HP": 10, "Class": "Berserker", "Horizontal": 1, "Vertical": 3})
+    HINT: The boss lies in one of the 4 corners. Once you encounter him, the battle will begin immediately.
+    """
+    if player["Horizontal"] == 1 and player["Vertical"] == 3:
+        print("HINT: The boss lies in one of the 4 corners. Once you encounter him, the battle will begin immediately.")
+    elif player["Horizontal"] == 3 and player["Vertical"] == 1:
+        print("HINT: The boss lies in one of the 4 corners. Once you encounter him, the battle will begin immediately")
+
+
 def boss_encounter(player):
     """Fight a boss monster and complete the game.
 
@@ -69,18 +85,16 @@ def boss_encounter(player):
         quit()
 
 
-def dungeon_map(horizontal, vertical, player):
-    """Print a map with available movement positions as an X and display current location as an X.
+def dungeon_map(coordinates, player):
+    """Print a map with available movement positions as O's and display current location as an X.
 
-    PARAM: horizontal, an integer between -1 and 1 inclusive
-    PARAM: vertical, an integer between -1 and 1 inclusive
+    PARAM: coordinates, a list of two integers between -1 and 1 inclusive
     PARAM: player, a well-formed dictionary with player stats
-    PRECONDITION: horizontal must be an integer between -1 and 1 inclusive
-    PRECONDITION: vertical must be an integer between -1 and 1 inclusive
+    PRECONDITION: coordinates must be a list of two integers between -1 and 1 inclusive
     PRECONDITION: player must be a well-formed dictionary with player stats
     POSTCONDITION: prints a map that displays current player location
 
-    >>> dungeon_map(0, 0, {"Name": 'Jacky', "HP": 10, "Class": "Berserker", "Horizontal": 2, "Vertical": 2})
+    >>> dungeon_map([0, 0], {"Name": 'Jacky', "HP": 10, "Class": "Berserker", "Horizontal": 2, "Vertical": 2})
      O O O O O
      O O O O O
      O O X O O
@@ -89,14 +103,13 @@ def dungeon_map(horizontal, vertical, player):
     ===========================================================================================================
 
     """
-    # Takes 3 parameters, horizontal movement, vertical movement, player position in form of dictionary
     dungeon = [['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O'],
                ['O', 'O', 'O', 'O', 'O']]  # Represents the map
-    player["Horizontal"] += horizontal  # Update Horizontal position
-    player["Vertical"] += vertical  # Update Vertical position
+    player["Horizontal"] += coordinates[0]  # Update Horizontal position
+    player["Vertical"] += coordinates[1]  # Update Vertical position
     dungeon[player["Horizontal"]][player["Vertical"]] = 'X'  # X represents current position
     for row in dungeon:
         for column in row:
@@ -105,18 +118,24 @@ def dungeon_map(horizontal, vertical, player):
     print("===========================================================================================================")
 
 
-def movement_input(player):  # FIX THIS GAME LOGIC
+def movement_input(player):
+    """Input a direction and move in that direction if possible.
+
+    PARAM: player, a well-formed dictionary with player stats
+    PRECONDITION: player must be a well-formed dictionary with player stats
+    RETURN: corresponding list of two integers indicating movement
+    """
     direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
                       "'w' for West, 's' for South. Type 'quit' to quit playing.")
     direction = direction.lower().strip()
     if direction == 'n' and player["Horizontal"] != 0:  # Can only move North if not at top section
-        return dungeon_map(-1, 0, player)
+        return [-1, 0]
     elif direction == 'e' and player["Vertical"] != 4:  # Can only move East if not at right-most section
-        return dungeon_map(0, 1, player)
+        return [0, 1]
     elif direction == 'w' and player["Vertical"] != 0:  # Can only move West if not at left-most section
-        return dungeon_map(0, -1, player)
+        return [0, -1]
     elif direction == 's' and player["Horizontal"] != 4:  # Can only move South if not at bottom section
-        return dungeon_map(1, 0, player)
+        return [1, 0]
     elif direction == 'quit':  # End game if quit
         quit()
     else:
@@ -125,6 +144,13 @@ def movement_input(player):  # FIX THIS GAME LOGIC
 
 
 def combat_choice(player, enemy):
+    """Fight or flee from an enemy encounter.
+
+    PARAM: player, a well-formed dictionary with character stats
+    PARAM: enemy, a well-formed dictionary with enemy stats
+    PRECONDITION: will not work unless both parameters are well-formed dictionaries each containing HP stats
+    POSTCONDITION: prints the results of a simulated battle after dice rolls
+    """
     choice = input("Do you wish to fight the monster? Type 'yes' to fight. Type 'no' to flee.")
     choice.lower().strip()
     if choice == 'yes':  # If player chooses to fight, execute combat_round function
@@ -143,7 +169,8 @@ def combat_choice(player, enemy):
 
 
 def combat_round(player, enemy):
-    """Simulate combat between two characters with dice rolls and attribute checks.
+    """Simulate combat between the player and an enemy with dice rolls until one of them dies.
+
     PARAM: player, a well-formed dictionary with character stats
     PARAM: enemy, a well-formed dictionary with enemy stats
     PRECONDITION: will not work unless both parameters are well-formed dictionaries each containing HP stats
@@ -195,7 +222,7 @@ def combat_round(player, enemy):
 
 
 def player_attack(player, enemy):
-    """Simulate combat when player attacks the enemy.
+    """Simulate a combat round when player attacks the enemy.
 
     PARAM: player, a well-formed dictionary with character stats
     PARAM: enemy, a well-formed dictionary with enemy stats
@@ -226,7 +253,7 @@ def player_attack(player, enemy):
 
 
 def enemy_attack(player):
-    """Simulate combat when player gets attacked.
+    """Simulate a combat round when player gets attacked.
 
     PARAM: player, a well-formed dictionary with character stats
     PRECONDITION: player must be a well-formed dictionary with HP stat
@@ -254,21 +281,32 @@ def enemy_attack(player):
         return player['HP']
 
 
-def main():
-    print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish.\nNavigate "
-          "the dungeon, slaughter your enemies, find the Holy Grail, and make your wish come true!")
-    player = character.create_character()
-    print("The X represents your current location. The O's represents available spaces to move into.")
-    dungeon_map(0, 0, player)
+def game_logic(player):
+    """Execute the game logic.
+
+    PARAM: player, a well-formed dictionary with character stats
+    PRECONDITION: player must be a well-formed dictionary with HP stat
+    POSTCONDITION: game is executed
+    """
     while True:
         boss_encounter(player)
         encounter = monster_encounter()
         if encounter is False:
             character.hp_recovery(player)
         else:
-            combat_choice(player, monster.monster_picker)
+            combat_choice(player, monster.monster_picker())
         character.character_status(player)
-        movement_input(player)
+        boss_hint(player)
+        dungeon_map(movement_input(player), player)
+
+
+def main():
+    print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish.\nNavigate "
+          "the dungeon, slaughter your enemies, find the Holy Grail, and make your wish come true!")
+    player = character.create_character()
+    print("The X represents your current location. The O's represents available spaces to move into.")
+    dungeon_map([0, 0], player)
+    game_logic(player)
 
 
 if __name__ == "__main__":

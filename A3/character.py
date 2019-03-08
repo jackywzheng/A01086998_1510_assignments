@@ -6,6 +6,10 @@
 
 
 def create_character():
+    """Create a character with a name and class.
+
+    RETURN: a well formed dictionary with character stats
+    """
     my_name = input("What is your name?")
     my_name = my_name.strip().lower()
     my_character = {"Name": my_name, "HP": 10, "Class": classes(), "Horizontal": 2, "Vertical": 2}
@@ -14,6 +18,10 @@ def create_character():
 
 
 def classes():
+    """Input character's class.
+
+    RETURN: selected class as a string
+    """
     print("Here is a list of classes:\n"
           "Saber - A jack-of-all-trades warrior. "
           "Agile and powerful in close quarters; extremely adept at swordsmanship.\n"
@@ -33,10 +41,22 @@ def classes():
 
 
 def hp_recovery(character):
+    """Update character's HP by 1 if less than 10.
+
+    RETURN: updated character's HP
+
+    >>> hp_recovery({"Name": 'Jacky', "HP": 9, "Class": "Saber", "Horizontal": 2, "Vertical": 2})
+    10
+    """
     if character["HP"] < 10:
         character["HP"] += 1
+        return character["HP"]
 
 
 def character_status(character):
+    """Print the status of the character.
+
+    POSTCONDITION: print the status of the character
+    """
     print("Name:", character["Name"], "          ", "Class:", character["Class"], "           ", "HP:", character["HP"])
     print("===========================================================================================================")
