@@ -8,6 +8,7 @@ import random
 import monster
 import character
 import doctest
+import json
 
 
 def roll_die(number_of_rolls, number_of_sides):
@@ -126,7 +127,7 @@ def movement_input(player):
     RETURN: corresponding list of two integers indicating movement
     """
     direction = input("Which direction do you want to travel? Type 'n' for North, 'e' for East, "
-                      "'w' for West, 's' for South. Type 'quit' to quit playing.")
+                      "'w' for West, 's' for South. Type 'quit' to save and quit playing.")
     direction = direction.lower().strip()
     if direction == 'n' and player["Horizontal"] != 0:  # Can only move North if not at top section
         return [-1, 0]
@@ -136,7 +137,8 @@ def movement_input(player):
         return [0, -1]
     elif direction == 's' and player["Horizontal"] != 4:  # Can only move South if not at bottom section
         return [1, 0]
-    elif direction == 'quit':  # End game if quit
+    elif direction == 'quit':  # Save the character in a JSON file and quit the game
+        save_character(player)
         quit()
     else:
         print("That was not a valid input, or you are trying to move out of the map. Please enter a valid input.")
@@ -300,13 +302,59 @@ def game_logic(player):
         dungeon_map(movement_input(player), player)
 
 
+def save_character(player):
+    """Save character state.
+
+    PARAM: player, a well formed dictionary with character stats
+    POSTCONDITION: player must be a well formed dictionary with character stats
+    POSTCONDITION: saves character dictionary in a .json file
+    """
+    filename = 'save.json'
+    with open(filename, 'w') as file_object:
+        json.dump(player, file_object)
+
+
+def load_character():
+    """Load character state.
+
+    RETURN: character dictionary in the .json file
+    """
+    filename = 'save.json'
+    with open(filename) as file_object:
+        player = json.load(file_object)
+    return player
+
+
+def load_choice():
+    """Ask user to load a save file.
+
+    POSTCONDITION: starts the game with or without a save file.
+    """
+    load = input("Do you want to load a previous save file? Type 'yes' or 'no'.")
+    load = load.lower().strip()
+    if load == "no":  # Create a new game
+        player = character.create_character()
+        print("The X represents your current location. The O's represents available spaces to move into.")
+        dungeon_map([0, 0], player)
+        game_logic(player)
+    elif load == "yes":
+        try:  # Start game with loaded file
+            dungeon_map([0, 0], load_character())
+            game_logic(load_character())
+        except FileNotFoundError:  # But if no save file is found, call function again and ask user to type 'no'.
+            print("You do not have a save file. Please type 'no' when asked again.")
+            load_choice()
+    else:
+        print("That is not a valid input. Please enter a valid input.")
+        load_choice()  # Call function again if input is invalid
+
+
 def main():
+    """Drives the function.
+    """
     print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish.\nNavigate "
           "the dungeon, slaughter your enemies, find the Holy Grail, and make your wish come true!")
-    player = character.create_character()
-    print("The X represents your current location. The O's represents available spaces to move into.")
-    dungeon_map([0, 0], player)
-    game_logic(player)
+    load_choice()
 
 
 if __name__ == "__main__":
