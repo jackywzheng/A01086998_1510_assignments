@@ -79,11 +79,13 @@ def boss_encounter(player):
     if player["Horizontal"] == 4 and player["Vertical"] == 4:
         print("You have found the Holy Grail! However, a strong monster stands between you and the Holy Grail. "
               "Defeat the monster to claim the Holy Grail and fulfill your wish!")
-        combat_round(player, monster.cthulu())
-        input("You have found the Holy Grail! What is your wish?")
-        print("You take a drink from the Holy Grail in order for it to grant your wish, only to discover that\n"
-              "it's just watermelon juice. You feel cheated, but at least your thirst was quenched.")
-        quit()
+        win = combat_round(player, monster.cthulu())
+        if win is True:
+            input("You have found the Holy Grail! What is your wish?")
+            print("You take a drink from the Holy Grail in order for it to grant your wish, only to discover that\n"
+                  "it's just watermelon juice. You feel cheated, but at least your thirst was quenched."
+                  "Thanks for playing!")
+            return True
 
 
 def dungeon_map(coordinates, player):
@@ -186,6 +188,7 @@ def combat_round(player, enemy):
     You did 6 damage
     Enemy has died
     You have slain the monster
+    True
 
     >>> random.seed(2)
     >>> combat_round({"Name": 'Jacky', "HP": 10, "Class": "Saber", "Horizontal": 2, "Vertical": 2}, \
@@ -201,6 +204,7 @@ def combat_round(player, enemy):
     You did 6 damage
     Enemy has died
     You have slain the monster
+    True
     """
     first_attack = roll_die(1, 2)  # Roll a 1d2, represents 50% chance of either character or enemy attacking first
     if first_attack == 1:  # If it's a 1, player attacks first
@@ -209,7 +213,7 @@ def combat_round(player, enemy):
             player_attack(player, enemy)
             if enemy['HP'] <= 0:  # If enemy dies, then combat ends
                 print('You have slain the monster')
-                return
+                return True
             else:
                 enemy_attack(player)  # Enemy attacks if still alive
     else:  # If it's a 2, enemy attacks first
@@ -291,7 +295,9 @@ def game_logic(player):
     POSTCONDITION: game is executed
     """
     while True:
-        boss_encounter(player)
+        win = boss_encounter(player)
+        if win is True:
+            break
         encounter = monster_encounter()
         if encounter is False:
             character.hp_recovery(player)
@@ -314,47 +320,15 @@ def save_character(player):
         json.dump(player, file_object)
 
 
-def load_character():
-    """Load character state.
-
-    RETURN: character dictionary in the .json file
-    """
-    filename = 'save.json'
-    with open(filename) as file_object:
-        player = json.load(file_object)
-    return player
-
-
-def load_choice():
-    """Ask user to load a save file.
-
-    POSTCONDITION: starts the game with or without a save file.
-    """
-    load = input("Do you want to load a previous save file? Type 'yes' or 'no'.")
-    load = load.lower().strip()
-    if load == "no":  # Create a new game
-        player = character.create_character()
-        print("The X represents your current location. The O's represents available spaces to move into.")
-        dungeon_map([0, 0], player)
-        game_logic(player)
-    elif load == "yes":
-        try:  # Start game with loaded file
-            dungeon_map([0, 0], load_character())
-            game_logic(load_character())
-        except FileNotFoundError:  # But if no save file is found, call function again and ask user to type 'no'.
-            print("You do not have a save file. Please type 'no' when asked again.")
-            load_choice()
-    else:
-        print("That is not a valid input. Please enter a valid input.")
-        load_choice()  # Call function again if input is invalid
-
-
 def main():
     """Drives the function.
     """
     print("You have enlisted into a battle known as the Holy Grail War in order to grant your dearest wish.\nNavigate "
           "the dungeon, slaughter your enemies, find the Holy Grail, and make your wish come true!")
-    load_choice()
+    player = character.create_character()
+    print("The X represents your current location. The O's represents available spaces to move into.")
+    dungeon_map([0, 0], player)
+    game_logic(player)
 
 
 if __name__ == "__main__":
