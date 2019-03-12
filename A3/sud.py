@@ -86,6 +86,8 @@ def boss_encounter(player):
                   "it's just watermelon juice. You feel cheated, but at least your thirst was quenched."
                   "Thanks for playing!")
             return True
+        else:
+            quit()
 
 
 def dungeon_map(coordinates, player):
@@ -159,7 +161,8 @@ def combat_choice(player, enemy):
     choice.lower().strip()
     if choice == 'yes':  # If player chooses to fight, execute combat_round function
         print("The battle begins!")
-        combat_round(player, enemy)
+        if combat_round(player, enemy) is False:
+            return False
     elif choice == 'no':  # If player chooses to flee, roll a 1d10 to represent a 10% chance
         print("You have fled!")
         chance = roll_die(1, 10)
@@ -210,18 +213,18 @@ def combat_round(player, enemy):
     if first_attack == 1:  # If it's a 1, player attacks first
         print('You attack first')
         while player["HP"] > 0:
-            player_attack(player, enemy)
-            if enemy['HP'] <= 0:  # If enemy dies, then combat ends
+            if player_attack(player, enemy) <= 0:  # If enemy dies, then combat ends
                 print('You have slain the monster')
                 return True
             else:
-                enemy_attack(player)  # Enemy attacks if still alive
+                if enemy_attack(player) <= 0:  # Enemy attacks if still alive
+                    return False
     else:  # If it's a 2, enemy attacks first
         print('Enemy attacks first')
         while enemy["HP"] > 0:
             if enemy_attack(player) <= 0:  # If player dies, then game over
                 print('Game over')
-                quit()
+                return False
             else:
                 player_attack(player, enemy)  # Player attacks if still alive
 
@@ -301,7 +304,8 @@ def game_logic(player):
         if encounter is False:
             character.hp_recovery(player)
         else:
-            combat_choice(player, monster.monster_picker())
+            if combat_choice(player, monster.monster_picker()) is False:
+                break
         character.character_status(player)
         boss_hint(player)
         dungeon_map(movement_input(player), player)

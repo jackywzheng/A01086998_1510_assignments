@@ -4,6 +4,7 @@
 # A01086998
 # 02/26/2019
 
+import doctest
 
 def create_character():
     """Create a character with a name and class.
@@ -11,7 +12,7 @@ def create_character():
     RETURN: a well formed dictionary with character stats
     """
     my_name = input("What is your name?")
-    my_name = my_name.strip().lower()
+    my_name = my_name.strip()
     my_character = {"Name": my_name, "HP": 10, "Class": classes(), "Horizontal": 2, "Vertical": 2}
     print("Your name is", my_name, "\nYour class is", my_character["Class"])
     return my_character
@@ -60,3 +61,12 @@ def character_status(character):
     """
     print("Name:", character["Name"], "          ", "Class:", character["Class"], "           ", "HP:", character["HP"])
     print("===========================================================================================================")
+
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()
+    doctest.testmod()
