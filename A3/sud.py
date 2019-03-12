@@ -219,8 +219,7 @@ def combat_round(player, enemy):
     else:  # If it's a 2, enemy attacks first
         print('Enemy attacks first')
         while enemy["HP"] > 0:
-            enemy_attack(player)
-            if player["HP"] <= 0:  # If player dies, then game over
+            if enemy_attack(player) <= 0:  # If player dies, then game over
                 print('Game over')
                 quit()
             else:
