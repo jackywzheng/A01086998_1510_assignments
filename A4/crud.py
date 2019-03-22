@@ -13,6 +13,25 @@ class Student:
         self.status = status
         self.final_grades = final_grades
 
+    def get_first_name(self):
+        return self.first_name
+
+    def get_last_name(self):
+        return self.last_name
+
+    def get_student_number(self):
+        return self.student_number
+
+    def get_status(self):
+        return self.status
+
+    def get_final_grades(self):
+        return self.final_grades
+
+    def print_info(self):
+        print("Name:", self.first_name, self.last_name, "Student Number: ", self.student_number,
+              "Status: ", self.status, "Final grades: ", self.final_grades)
+
 
 def add_student():
     first_name = input("Enter the student's first name: ")
