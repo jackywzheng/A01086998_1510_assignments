@@ -5,6 +5,8 @@
 # 02/26/2019
 
 import random
+import doctest
+import sud
 
 
 def cthulu():
@@ -33,7 +35,16 @@ def cat():
 
 
 def monster_picker():
-    roll = random.randint(1, 4)
+    """Randomly select a monster.
+
+    POSTCONDITION: return a monster
+
+    >>> random.seed(1)
+    >>> monster_picker()
+    You have encountered a table flipper! Don't get hit by his frustrations! (╯‵□′)╯︵┴─┴ It has 5 HP.
+    {'Name': 'Table Flipper', 'HP': 5}
+    """
+    roll = sud.roll_die(1, 4)
     if roll == 1:
         return slime()
     elif roll == 2:
@@ -42,3 +53,12 @@ def monster_picker():
         return cat()
     elif roll == 4:
         return werebear()
+
+
+def main():
+    pass
+
+
+if __name__ == "__main__":
+    main()
+    doctest.testmod()
