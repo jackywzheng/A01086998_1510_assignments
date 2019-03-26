@@ -28,6 +28,15 @@ class Student:
     def get_grades(self):
         return self.grades
 
+    def get_gpa(self):
+        gpa = 0
+        for grades in self.grades:
+            gpa += grades
+        try:
+            return round(gpa / len(self.grades), 2)
+        except ZeroDivisionError:
+            return None
+
     def print_info(self):
         print("Name:", self.first_name, self.last_name, "Student Number:", self.student_number,
               "Status:", self.status, "Grades:", self.grades)
@@ -37,7 +46,7 @@ def add_student():
     first_name = input("Enter the student's first name: ")
     last_name = input("Enter the student's last name: ")
     student_number = input("Enter the student number: ")
-    status = input("Enter the student's status (in good standing or not in good standing): ")
+    status = input("Enter the student's status (in-good-standing or not-in-good-standing): ")
     try:
         new_student = Student(first_name, last_name, student_number, status)
         file_write(new_student)
@@ -95,29 +104,26 @@ def main():
         choice = int(input("1. Add student\n2. Delete student\n"
                            "3. Calculate class average\n4. Print class list\n5. Quit"))
         if choice == 1:
-            pass
+            add_student()
         elif choice == 2:
             delete_student_number = input("What is the student number that you wish to delete? ")
             delete_result = file_delete_student(delete_student_number)
             if delete_result is True:
-                print("The student has been deleted.")
+                print("The student was deleted.")
             else:
                 print("Student number was not found. The student was not deleted.")
         elif choice == 3:
             student_list = file_read()
             class_gpa = 0
             for student in student_list:
-                gpa = 0
-                for each_grade in student.grades:
-                    gpa += each_grade
-                gpa /= len(student.grades)
-                print(student.get_first_name(), student.get_last_name(), "s' GPA is:", round(gpa, 2))
-                class_gpa += gpa
+                print(student.get_first_name(), student.get_last_name() + "'s GPA is:", student.get_gpa())
+                if student.get_gpa() is not None:
+                    class_gpa += student.get_gpa()
             print("The class average is:", round(class_gpa/len(student_list), 2))
         elif choice == 4:
-            pass
+            print("Class list in a meaningful way")
         elif choice == 5:
-            quit()
+            break
         else:
             print("You did not enter a valid input. Please enter a valid input.")
 
