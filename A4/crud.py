@@ -11,6 +11,7 @@ class Student:
         self.last_name = last_name
         self.student_number = student_number
         self.status = status
+        self.grades = []
 
     def get_first_name(self):
         return self.first_name
@@ -24,9 +25,12 @@ class Student:
     def get_status(self):
         return self.status
 
+    def get_grades(self):
+        return self.grades
+
     def print_info(self):
-        print("Name:", self.first_name, self.last_name, "Student Number: ", self.student_number,
-              "Status: ", self.status)
+        print("Name:", self.first_name, self.last_name, "Student Number:", self.student_number,
+              "Status:", self.status, "Grades:", self.grades)
 
 
 def add_student():
@@ -54,8 +58,30 @@ def file_delete_student(delete_student_number):
 
 
 def file_read():
+    student_list = []
     with open("students.txt") as file_object:
-        file_object.readlines()
+        lines = file_object.readlines()  # Returns a list of lines
+        for line in lines:  # Iterate through each line in the list
+            student_line = line.split()  # Split the line into a list of tokens
+            final_grades = []
+            for grades in student_line:
+                try:
+                    final_grades.append(int(grades))
+                except ValueError:
+                    pass
+            # Append each Student object to student_list by using the indexes in student_line to instantiate
+            student_object = Student(student_line[0], student_line[1], student_line[2], student_line[3])
+            setattr(student_object, "grades", final_grades)
+            student_list.append(student_object)
+    return student_list
+
+
+def print_class_list():
+    with open("students.txt") as file_object:
+        lines = file_object.readlines()
+        for line in lines:
+            student_line = line.split()
+            print(student_line)
 
 
 def file_write(new_student):
@@ -78,11 +104,20 @@ def main():
             else:
                 print("Student number was not found. The student was not deleted.")
         elif choice == 3:
-            pass
+            student_list = file_read()
+            class_gpa = 0
+            for student in student_list:
+                gpa = 0
+                for each_grade in student.grades:
+                    gpa += each_grade
+                gpa /= len(student.grades)
+                print(student.get_first_name(), student.get_last_name(), "s' GPA is:", round(gpa, 2))
+                class_gpa += gpa
+            print("The class average is:", round(class_gpa/len(student_list), 2))
         elif choice == 4:
             pass
         elif choice == 5:
-            pass
+            quit()
         else:
             print("You did not enter a valid input. Please enter a valid input.")
 
