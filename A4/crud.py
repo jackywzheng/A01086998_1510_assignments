@@ -57,13 +57,9 @@ def add_student():
 def file_delete_student(delete_student_number):
     with open("students.txt", "r+") as file_object:
         student_file = file_object.readlines()
-        file_object.seek(0)
         for line in student_file:
             if line != delete_student_number:
-                file_object.write(line)
-                return True
-            else:
-                return False
+                file_object.write(line)  # Writes whole list
 
 
 def file_read():
