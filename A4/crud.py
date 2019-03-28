@@ -107,7 +107,7 @@ def file_write(new_student):
 def main():
     while True:
         choice = int(input("1. Add student\n2. Delete student\n"
-                           "3. Calculate class average\n4. Print class list\n5. Quit"))
+                           "3. Calculate class average\n4. Print class list (sorted by last name)\n5. Quit"))
         if choice == 1:
             add_student()
         elif choice == 2:
@@ -128,7 +128,14 @@ def main():
                     students_with_gpa += 1  # Add 1 to students_with_gpa
             print("The class average is:", round(class_gpa/students_with_gpa, 2))  # Only counts students with a GPA
         elif choice == 4:
-            print("Class list in a meaningful way")
+            student_list = file_read()
+            sorting_list = []
+            for student in student_list:
+                sorting_list.append([student.get_last_name(), student])
+            sorting_list.sort()
+            for student in sorting_list:
+                student[1].print_info()
+
         elif choice == 5:
             break
         else:
