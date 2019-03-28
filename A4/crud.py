@@ -7,23 +7,28 @@
 
 class Student:
     def __init__(self, first_name: str, last_name: str, student_number: str, status: str):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.student_number = student_number
-        self.status = status
+        if first_name.isalpha() and last_name.isalpha():
+            self.__first_name = first_name
+            self.__last_name = last_name
+        if student_number[0] == "A" and student_number[1:9].isdigit():
+            self.__student_number = student_number
+        if status == "True" or status == "False":
+            self.__status = status
+        else:
+            raise ValueError
         self.grades = []
 
     def get_first_name(self):
-        return self.first_name
+        return self.__first_name
 
     def get_last_name(self):
-        return self.last_name
+        return self.__last_name
 
     def get_student_number(self):
-        return self.student_number
+        return self.__student_number
 
     def get_status(self):
-        return self.status
+        return self.__status
 
     def get_grades(self):
         return self.grades
@@ -37,20 +42,22 @@ class Student:
             return round(gpa / len(self.grades), 2)
 
     def print_info(self):
-        print("Name:", self.first_name, self.last_name, "Student Number:", self.student_number, "Status:", self.status,
-              "Grades:", self.grades, "\n============================================================================")
+        print("Name:", self.__first_name, self.__last_name, "Student Number:", self.__student_number,
+              "Status:", self.__status, "Grades:", self.grades,
+              "\n========================================================================================")
 
 
 def add_student():
     first_name = input("Enter the student's first name: ")
     last_name = input("Enter the student's last name: ")
-    student_number = input("Enter the student number: ")
+    student_number = input("Enter the student number in the format of (A########): ")
     status = input("Enter the student's status (True or False): ")
     try:
         new_student = Student(first_name, last_name, student_number, status)
-        file_write(new_student)
-    except TypeError:
+    except AttributeError:
         print("Error. You did not enter the required information to add a new student. Returning to menu.")
+    else:
+        file_write(new_student)
 
 
 def file_delete_student(delete_student_number):
@@ -89,18 +96,10 @@ def file_read():
     return student_list
 
 
-def print_class_list():
-    with open("students.txt") as file_object:
-        lines = file_object.readlines()
-        for line in lines:
-            student_line = line.split()
-            print(student_line)
-
-
 def file_write(new_student):
     with open("students.txt", 'a') as file_object:
-        file_object.write(new_student.first_name + " " + new_student.last_name + " " +
-                          new_student.student_number + " " + new_student.status + "\n")
+        file_object.write(new_student.get_first_name() + " " + new_student.get_last_name() + " " +
+                          new_student.get_student_number() + " " + new_student.get_status() + "\n")
 
 
 def add_grade():
@@ -118,12 +117,39 @@ def add_grade():
                 file_object.write(line)
 
 
+def calculate_class_average():
+    student_list = file_read()  # Returns a list of student objects
+    class_gpa = 0  # Acts as a counter to add student GPAs to
+    students_with_gpa = 0  # Acts as a counter to count how many students have grades
+    for student in student_list:
+        print(student.get_first_name(), student.get_last_name() + "'s GPA is:", student.get_gpa())
+        if student.get_gpa() is not None:  # get_gpa() will return None if student object has no grades
+            class_gpa += student.get_gpa()  # Add the GPA of each student with a GPA to class_gpa
+            students_with_gpa += 1  # Add 1 to students_with_gpa
+    print("The class average is:", round(class_gpa / students_with_gpa, 2))  # Only counts students with a GPA
+
+
+def print_class_list():
+    student_list = file_read()  # Returns a list of student objects
+    sorting_list = []  # Create empty list for sorting purposes
+    for student in student_list:
+        # Append a list to sorting_list in the form of [last_name, StudentObject]
+        sorting_list.append([student.get_last_name(), student])
+    sorting_list.sort()  # Sort the sorting_list alphabetically
+    for student in sorting_list:  # sorting_list now sorted, loop through list and print info of each student
+        student[1].print_info()
+
+
 def main():
     while True:
         choice = int(input("1. Add student\n2. Delete student\n3. Calculate class average\n"
                            "4. Print class list (sorted by last name)\n5. Add grade\n6. Quit"))
         if choice == 1:
-            add_student()
+            try:
+                add_student()
+                print("Student successfully added!")
+            except ValueError:
+                print("Adding student failed due to invalid input. Returning to menu...")
         elif choice == 2:
             delete_student_number = input("What is the student number that you wish to delete? ")
             delete_result = file_delete_student(delete_student_number)
@@ -132,24 +158,9 @@ def main():
             else:
                 print("Student number was not found. The student was not deleted.")
         elif choice == 3:
-            student_list = file_read()  # Returns a list of student objects
-            class_gpa = 0  # Acts as a counter to add student GPAs to
-            students_with_gpa = 0  # Acts as a counter to count how many students have grades
-            for student in student_list:
-                print(student.get_first_name(), student.get_last_name() + "'s GPA is:", student.get_gpa())
-                if student.get_gpa() is not None:  # get_gpa() will return None if student object has no grades
-                    class_gpa += student.get_gpa()  # Add the GPA of each student with a GPA to class_gpa
-                    students_with_gpa += 1  # Add 1 to students_with_gpa
-            print("The class average is:", round(class_gpa/students_with_gpa, 2))  # Only counts students with a GPA
+            calculate_class_average()
         elif choice == 4:
-            student_list = file_read()  # Returns a list of student objects
-            sorting_list = []  # Create empty list for sorting purposes
-            for student in student_list:
-                # Append a list to sorting_list in the form of [last_name, StudentObject]
-                sorting_list.append([student.get_last_name(), student])
-            sorting_list.sort()  # Sort the sorting_list alphabetically
-            for student in sorting_list:  # sorting_list now sorted, loop through list and print info of each student
-                student[1].print_info()
+            print_class_list()
         elif choice == 5:
             add_grade()
         elif choice == 6:
