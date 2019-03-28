@@ -37,8 +37,8 @@ class Student:
             return round(gpa / len(self.grades), 2)
 
     def print_info(self):
-        print("Name:", self.first_name, self.last_name, "Student Number:", self.student_number,
-              "Status:", self.status, "Grades:", self.grades)
+        print("Name:", self.first_name, self.last_name, "Student Number:", self.student_number, "Status:", self.status,
+              "Grades:", self.grades, "\n============================================================================")
 
 
 def add_student():
@@ -60,9 +60,8 @@ def file_delete_student(delete_student_number):
     with open("students.txt", "w") as file_object:
         for line in student_file:
             if delete_student_number not in line:  # If the line doesn't contain the student number, then rewrite it
-                file_object.write(line)  # Writes whole list
+                file_object.write(line)  # Writes the line only if the line doesn't contain the student number
                 new_student_file.append(line)  # Add it to new_student_file list so I can check if it was deleted
-    print(new_student_file)
     if delete_student_number not in student_file:  # If it wasn't in student_file, then return False as it doesn't exist
         return False
     elif delete_student_number not in new_student_file:  # If it's not in the new_student_file, then it was deleted
@@ -104,10 +103,30 @@ def file_write(new_student):
                           new_student.student_number + " " + new_student.status + "\n")
 
 
+def add_grade():
+    student_number = input("Enter the student number: ")
+    # with open("students.txt", 'r+') as file_object:
+    #     for line in file_object:
+    #         if student_number in line:
+    #             grade = input("Enter the new grade you wish to add: ")
+    #             file_object.write(line + " " + grade + "\n")
+    new_student_file = []
+    with open("students.txt", "r") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
+        student_file = file_object.readlines()  # Create a list of each line as a string
+    with open("students.txt", "w") as file_object:
+        for line in student_file:
+            if student_number in line:  # If the line doesn't contain the student number, then rewrite it
+                grade = input("Enter the new grade you wish to add: ")
+                updated_line = line + " " + grade
+                file_object.write(updated_line)
+            else:
+                file_object.write(line)
+
+
 def main():
     while True:
-        choice = int(input("1. Add student\n2. Delete student\n"
-                           "3. Calculate class average\n4. Print class list (sorted by last name)\n5. Quit"))
+        choice = int(input("1. Add student\n2. Delete student\n3. Calculate class average\n"
+                           "4. Print class list (sorted by last name)\n5. Add grade\n6. Quit"))
         if choice == 1:
             add_student()
         elif choice == 2:
@@ -119,8 +138,8 @@ def main():
                 print("Student number was not found. The student was not deleted.")
         elif choice == 3:
             student_list = file_read()  # Returns a list of student objects
-            class_gpa = 0
-            students_with_gpa = 0
+            class_gpa = 0  # Acts as a counter to add student GPAs to
+            students_with_gpa = 0  # Acts as a counter to count how many students have grades
             for student in student_list:
                 print(student.get_first_name(), student.get_last_name() + "'s GPA is:", student.get_gpa())
                 if student.get_gpa() is not None:  # get_gpa() will return None if student object has no grades
@@ -128,15 +147,17 @@ def main():
                     students_with_gpa += 1  # Add 1 to students_with_gpa
             print("The class average is:", round(class_gpa/students_with_gpa, 2))  # Only counts students with a GPA
         elif choice == 4:
-            student_list = file_read()
-            sorting_list = []
+            student_list = file_read()  # Returns a list of student objects
+            sorting_list = []  # Create empty list for sorting purposes
             for student in student_list:
+                # Append a list to sorting_list in the form of [last_name, StudentObject]
                 sorting_list.append([student.get_last_name(), student])
-            sorting_list.sort()
-            for student in sorting_list:
+            sorting_list.sort()  # Sort the sorting_list alphabetically
+            for student in sorting_list:  # sorting_list now sorted, loop through list and print info of each student
                 student[1].print_info()
-
         elif choice == 5:
+            add_grade()
+        elif choice == 6:
             break
         else:
             print("You did not enter a valid input. Please enter a valid input.")

@@ -1,3 +1,4 @@
-Jacky Zheng A12345673 True 50
+Jacky Zheng A12345673 True 50 75
 Niki Guo A12345675 False 100
 Haha XD A12345671 True
+
