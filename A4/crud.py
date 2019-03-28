@@ -29,13 +29,12 @@ class Student:
         return self.grades
 
     def get_gpa(self):
+        if self.grades is []:
+            return None
         gpa = 0
         for grades in self.grades:
             gpa += grades
-        try:
             return round(gpa / len(self.grades), 2)
-        except ZeroDivisionError:
-            return None
 
     def print_info(self):
         print("Name:", self.first_name, self.last_name, "Student Number:", self.student_number,
@@ -46,7 +45,7 @@ def add_student():
     first_name = input("Enter the student's first name: ")
     last_name = input("Enter the student's last name: ")
     student_number = input("Enter the student number: ")
-    status = input("Enter the student's status (in-good-standing or not-in-good-standing): ")
+    status = input("Enter the student's status (True or False): ")
     try:
         new_student = Student(first_name, last_name, student_number, status)
         file_write(new_student)
@@ -55,11 +54,21 @@ def add_student():
 
 
 def file_delete_student(delete_student_number):
-    with open("students.txt", "r+") as file_object:
-        student_file = file_object.readlines()
+    new_student_file = []
+    with open("students.txt", "r") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
+        student_file = file_object.readlines()  # Create a list of each line as a string
+    with open("students.txt", "w") as file_object:
         for line in student_file:
-            if line != delete_student_number:
+            if delete_student_number not in line:  # If the line doesn't contain the student number, then rewrite it
                 file_object.write(line)  # Writes whole list
+                new_student_file.append(line)  # Add it to new_student_file list so I can check if it was deleted
+    print(new_student_file)
+    if delete_student_number not in student_file:  # If it wasn't in student_file, then return False as it doesn't exist
+        return False
+    elif delete_student_number not in new_student_file:  # If it's not in the new_student_file, then it was deleted
+        return True
+    else:  # Else it wasn't deleted as the student number wasn't found
+        return False
 
 
 def file_read():
@@ -109,13 +118,15 @@ def main():
             else:
                 print("Student number was not found. The student was not deleted.")
         elif choice == 3:
-            student_list = file_read()
+            student_list = file_read()  # Returns a list of student objects
             class_gpa = 0
+            students_with_gpa = 0
             for student in student_list:
                 print(student.get_first_name(), student.get_last_name() + "'s GPA is:", student.get_gpa())
-                if student.get_gpa() is not None:
-                    class_gpa += student.get_gpa()
-            print("The class average is:", round(class_gpa/len(student_list), 2))
+                if student.get_gpa() is not None:  # get_gpa() will return None if student object has no grades
+                    class_gpa += student.get_gpa()  # Add the GPA of each student with a GPA to class_gpa
+                    students_with_gpa += 1  # Add 1 to students_with_gpa
+            print("The class average is:", round(class_gpa/students_with_gpa, 2))  # Only counts students with a GPA
         elif choice == 4:
             print("Class list in a meaningful way")
         elif choice == 5:

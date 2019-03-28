@@ -1,8 +1,3 @@
-Christopher Thompson A12345678 in-good-standing 90 80 76 100 62 74
-Jacky Zheng A12345673 in-good-standing 90 80 76
-Niki Guo A12345675 in-good-standing 90
-Haha XD A12345671 in-good-standing
-Christopher Thompson A12345678 in-good-standing 90 80 76 100 62 74
-Jacky Zheng A12345673 in-good-standing 90 80 76
-Niki Guo A12345675 in-good-standing 90
-Haha XD A12345671 in-good-standing
+Jacky Zheng A12345673 True 50
+Niki Guo A12345675 False 100
+Haha XD A12345671 True
