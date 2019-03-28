@@ -105,20 +105,15 @@ def file_write(new_student):
 
 def add_grade():
     student_number = input("Enter the student number: ")
-    # with open("students.txt", 'r+') as file_object:
-    #     for line in file_object:
-    #         if student_number in line:
-    #             grade = input("Enter the new grade you wish to add: ")
-    #             file_object.write(line + " " + grade + "\n")
-    new_student_file = []
     with open("students.txt", "r") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
         student_file = file_object.readlines()  # Create a list of each line as a string
     with open("students.txt", "w") as file_object:
         for line in student_file:
+            student_tokens = line.split()  # Create a list, add to list, make it into a string, write it
             if student_number in line:  # If the line doesn't contain the student number, then rewrite it
                 grade = input("Enter the new grade you wish to add: ")
-                updated_line = line + " " + grade
-                file_object.write(updated_line)
+                student_tokens.append(grade)
+                file_object.write(" ".join(student_tokens) + "\n")
             else:
                 file_object.write(line)
 
