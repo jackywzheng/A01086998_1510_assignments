@@ -16,7 +16,7 @@ class Student:
             self.__status = status
         else:
             raise ValueError
-        self.grades = []
+        self.__grades = []
 
     def get_first_name(self):
         return self.__first_name
@@ -31,20 +31,28 @@ class Student:
         return self.__status
 
     def get_grades(self):
-        return self.grades
+        return self.__grades
 
     def get_gpa(self):
-        if self.grades is []:
+        if self.__grades is []:
             return None
         gpa = 0
-        for grades in self.grades:
+        for grades in self.__grades:
             gpa += grades
-            return round(gpa / len(self.grades), 2)
+            return round(gpa / len(self.__grades), 2)
+
+    def set_grades(self, grades):
+        self.__grades = grades
 
     def print_info(self):
         print("Name:", self.__first_name, self.__last_name, "Student Number:", self.__student_number,
-              "Status:", self.__status, "Grades:", self.grades,
+              "Status:", self.__status, "Grades:", self.__grades,
               "\n========================================================================================")
+
+    def __str__(self):
+        student_info = self.__first_name + " " + self.__last_name + " " + \
+                       self.__student_number + " " + self.__status + " " + " ".join(self.__grades) + "\n"
+        return student_info
 
 
 def add_student():
@@ -52,12 +60,18 @@ def add_student():
     last_name = input("Enter the student's last name: ")
     student_number = input("Enter the student number in the format of (A########): ")
     status = input("Enter the student's status (True or False): ")
+    number_of_grades = int(input("Enter the number of student's grades that you wish to add: "))
     try:
         new_student = Student(first_name, last_name, student_number, status)
+        if number_of_grades > 0:
+            grades_list = []
+            for i in range(number_of_grades):
+                grades = input("Enter a grade: ")
+                grades_list.append(grades)
+            new_student.set_grades(grades_list)
+            file_write(new_student)
     except AttributeError:
         print("Error. You did not enter the required information to add a new student. Returning to menu.")
-    else:
-        file_write(new_student)
 
 
 def file_delete_student(delete_student_number):
@@ -98,8 +112,7 @@ def file_read():
 
 def file_write(new_student):
     with open("students.txt", 'a') as file_object:
-        file_object.write(new_student.get_first_name() + " " + new_student.get_last_name() + " " +
-                          new_student.get_student_number() + " " + new_student.get_status() + "\n")
+        file_object.write(str(new_student))
 
 
 def add_grade():
@@ -110,8 +123,8 @@ def add_grade():
         for line in student_file:
             student_tokens = line.split()  # Create a list, add to list, make it into a string, write it
             if student_number in line:  # If the line doesn't contain the student number, then rewrite it
-                grade = input("Enter the new grade you wish to add: ")
-                student_tokens.append(grade)
+                student_grade = input("Enter the new grade you wish to add: ")
+                student_tokens.append(student_grade)
                 file_object.write(" ".join(student_tokens) + "\n")
             else:
                 file_object.write(line)
@@ -142,28 +155,28 @@ def print_class_list():
 
 def main():
     while True:
-        choice = int(input("1. Add student\n2. Delete student\n3. Calculate class average\n"
-                           "4. Print class list (sorted by last name)\n5. Add grade\n6. Quit"))
-        if choice == 1:
+        choice = input("1. Add student\n2. Delete student\n3. Calculate class average\n"
+                       "4. Print class list (sorted by last name)\n5. Add grade\n6. Quit")
+        if choice == "1":
             try:
                 add_student()
                 print("Student successfully added!")
             except ValueError:
                 print("Adding student failed due to invalid input. Returning to menu...")
-        elif choice == 2:
+        elif choice == "2":
             delete_student_number = input("What is the student number that you wish to delete? ")
             delete_result = file_delete_student(delete_student_number)
             if delete_result is True:
                 print("The student was deleted.")
             else:
                 print("Student number was not found. The student was not deleted.")
-        elif choice == 3:
+        elif choice == "3":
             calculate_class_average()
-        elif choice == 4:
+        elif choice == "4":
             print_class_list()
-        elif choice == 5:
+        elif choice == "5":
             add_grade()
-        elif choice == 6:
+        elif choice == "6":
             break
         else:
             print("You did not enter a valid input. Please enter a valid input.")
