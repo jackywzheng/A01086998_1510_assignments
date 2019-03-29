@@ -10,12 +10,16 @@ class Student:
         if first_name.isalpha() and last_name.isalpha():
             self.__first_name = first_name
             self.__last_name = last_name
+        else:
+            raise ValueError("Names must only contain letters!")
         if student_number[0] == "A" and student_number[1:9].isdigit():
             self.__student_number = student_number
+        else:
+            raise ValueError("Student number must be in the form of A########!")
         if status == "True" or status == "False":
             self.__status = status
         else:
-            raise ValueError
+            raise ValueError("Status must be True or False")
         self.__grades = []
 
     def get_first_name(self):
@@ -62,7 +66,7 @@ def add_student():
     status = input("Enter the student's status (True or False): ")
     number_of_grades = int(input("Enter the number of student's grades that you wish to add: "))
     try:
-        new_student = Student(first_name, last_name, student_number, status)
+        new_student = Student(first_name.strip(), last_name.strip(), student_number.strip(), status.strip())
         if number_of_grades > 0:
             grades_list = []
             for i in range(number_of_grades):
