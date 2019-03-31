@@ -7,12 +7,12 @@
 
 class Student:
     def __init__(self, first_name: str, last_name: str, student_number: str, status: str):
-        if first_name.isalpha() and last_name.isalpha():
+        if first_name.isalpha() and len(first_name) != 0 and last_name.isalpha() and len(last_name) != 0:
             self.__first_name = first_name
             self.__last_name = last_name
         else:
             raise ValueError("Names must only contain letters!")
-        if student_number[0] == "A" and student_number[1:9].isdigit():
+        if student_number[0] == "A" and student_number[1:9].isdigit() and len(student_number) == 9:
             self.__student_number = student_number
         else:
             raise ValueError("Student number must be in the form of A########!")
@@ -38,12 +38,12 @@ class Student:
         return self.__grades
 
     def get_gpa(self):
-        if self.__grades is []:
+        if len(self.__grades) == 0:  # Falsy value so I have to use is not
             return None
         gpa = 0
         for grades in self.__grades:
-            gpa += grades
-            return round(gpa / len(self.__grades), 2)
+            gpa += int(grades)
+        return round(gpa / len(self.__grades), 2)
 
     def set_grades(self, grades):
         self.__grades = grades
@@ -73,26 +73,26 @@ def add_student():
                 grades = input("Enter a grade: ")
                 grades_list.append(grades)
             new_student.set_grades(grades_list)
-            file_write(new_student)
+        file_write(new_student)
     except AttributeError:
-        print("Error. You did not enter the required information to add a new student. Returning to menu.")
+        print("Error. You did not enter the required information to add a new student. Returning to menu...")
 
 
-def file_delete_student(delete_student_number):
-    new_student_file = []
+def file_delete_student(deleted_student_number):
+    student_number_checker = []
     with open("students.txt", "r") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
         student_file = file_object.readlines()  # Create a list of each line as a string
+        if deleted_student_number not in " ".join(student_file):  # Return False immediately if not in file string
+            return False
     with open("students.txt", "w") as file_object:
         for line in student_file:
-            if delete_student_number not in line:  # If the line doesn't contain the student number, then rewrite it
+            if deleted_student_number not in line:  # If the line doesn't contain the student number, then rewrite it
                 file_object.write(line)  # Writes the line only if the line doesn't contain the student number
-                new_student_file.append(line)  # Add it to new_student_file list so I can check if it was deleted
-    if delete_student_number not in student_file:  # If it wasn't in student_file, then return False as it doesn't exist
+                student_number_checker.append(line)  # Add it to new_student_file list so I can check if it was deleted
+    if deleted_student_number in student_number_checker:  # If
         return False
-    elif delete_student_number not in new_student_file:  # If it's not in the new_student_file, then it was deleted
+    else:  # If it's not in the new_student_file, then it was deleted
         return True
-    else:  # Else it wasn't deleted as the student number wasn't found
-        return False
 
 
 def file_read():
@@ -100,16 +100,17 @@ def file_read():
     with open("students.txt") as file_object:
         lines = file_object.readlines()  # Returns a list of lines
         for line in lines:  # Iterate through each line in the list
-            student_line = line.split()  # Split the line into a list of tokens
             final_grades = []
-            for grades in student_line:
+            for grades in line.split():  # Split the line into a list of tokens
                 try:
-                    final_grades.append(int(grades))
+                    int(grades)
                 except ValueError:
                     pass
+                else:
+                    final_grades.append(grades)
             # Append each Student object to student_list by using the indexes in student_line to instantiate
-            student_object = Student(student_line[0], student_line[1], student_line[2], student_line[3])
-            setattr(student_object, "grades", final_grades)
+            student_object = Student(line.split()[0], line.split()[1], line.split()[2], line.split()[3])
+            student_object.set_grades(final_grades)
             student_list.append(student_object)
     return student_list
 
@@ -168,12 +169,16 @@ def main():
             except ValueError:
                 print("Adding student failed due to invalid input. Returning to menu...")
         elif choice == "2":
-            delete_student_number = input("What is the student number that you wish to delete? ")
-            delete_result = file_delete_student(delete_student_number)
-            if delete_result is True:
-                print("The student was deleted.")
+            deleted_student_number = input("What is the student number that you wish to delete? ")
+            if deleted_student_number[0] == "A" and deleted_student_number[1:9].isdigit() \
+                    and len(deleted_student_number) == 9:
+                delete_result = file_delete_student(deleted_student_number)
+                if delete_result is True:
+                    print("The student was deleted.")
+                else:
+                    print("Student number was not found. The student was not deleted.")
             else:
-                print("Student number was not found. The student was not deleted.")
+                print("Student number must be in the form of A########!")
         elif choice == "3":
             calculate_class_average()
         elif choice == "4":
