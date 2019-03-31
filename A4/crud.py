@@ -38,12 +38,12 @@ class Student:
         return self.__grades
 
     def get_gpa(self):
-        if len(self.__grades) == 0:  # Falsy value so I have to use is not
+        if len(self.__grades) == 0:  # If empty list, then return None
             return None
         gpa = 0
         for grades in self.__grades:
             gpa += int(grades)
-        return round(gpa / len(self.__grades), 2)
+        return round(gpa / len(self.__grades), 2)  # Else return the GPA
 
     def set_grades(self, grades):
         self.__grades = grades
