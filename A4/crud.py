@@ -6,8 +6,8 @@
 
 
 class Student:
-    def __init__(self, first_name: str, last_name: str, student_number: str, status: str):
-        if first_name.isalpha() and len(first_name) != 0 and last_name.isalpha() and len(last_name) != 0:
+    def __init__(self, first_name: str, last_name: str, student_number: str, status: bool, grades: list = None):
+        if len(first_name) != 0 and len(last_name) != 0:
             self.__first_name = first_name
             self.__last_name = last_name
         else:
@@ -16,12 +16,13 @@ class Student:
             self.__student_number = student_number
         else:
             raise ValueError("Student number must be in the form of A########!")
-        if status == "True" or status == "False":
+        if status is True or status is False:
             self.__status = status
         else:
             raise ValueError("Status must be True or False")
-        self.__grades = []
+        self.__grades = grades
 
+    # Accessors
     def get_first_name(self):
         return self.__first_name
 
@@ -45,17 +46,23 @@ class Student:
             gpa += int(grades)
         return round(gpa / len(self.__grades), 2)  # Else return the GPA
 
+    # Mutators
     def set_grades(self, grades):
         self.__grades = grades
 
+    def set_first_name(self, first_name):
+        self.__first_name = first_name
+
+    def set_last_name(self, last_name):
+        self.__last_name = last_name
+
     def print_info(self):
         print("Name:", self.__first_name, self.__last_name, "Student Number:", self.__student_number,
-              "Status:", self.__status, "Grades:", self.__grades,
-              "\n========================================================================================")
+              "Status:", self.__status, "Grades:", self.__grades)
 
     def __str__(self):
         student_info = self.__first_name + " " + self.__last_name + " " + \
-                       self.__student_number + " " + self.__status + " " + " ".join(self.__grades) + "\n"
+                       self.__student_number + " " + str(self.__status) + " " + " ".join(self.__grades) + "\n"
         return student_info
 
 
@@ -63,19 +70,17 @@ def add_student():
     first_name = input("Enter the student's first name: ")
     last_name = input("Enter the student's last name: ")
     student_number = input("Enter the student number in the format of (A########): ")
-    status = input("Enter the student's status (True or False): ")
-    number_of_grades = int(input("Enter the number of student's grades that you wish to add: "))
+    status_input = input("What is the student's status? Type '1' for True, '2' for False: ")
+    status = True if status_input == "1" else False
+    number_of_grades = input("Enter the student's grades each separated by a space : ")
     try:
-        new_student = Student(first_name.strip(), last_name.strip(), student_number.strip(), status.strip())
-        if number_of_grades > 0:
-            grades_list = []
-            for i in range(number_of_grades):
-                grades = input("Enter a grade: ")
-                grades_list.append(grades)
-            new_student.set_grades(grades_list)
+        grades_list = []
+        for each_grade in number_of_grades.split():
+            grades_list.append(each_grade)
+        new_student = Student(first_name.strip(), last_name.strip(), student_number.strip(), status, grades_list)
         file_write(new_student)
     except AttributeError:
-        print("Error. You did not enter the required information to add a new student. Returning to menu...")
+        print("Error. You did not enter the correct information to add a new student. Returning to menu...")
 
 
 def file_delete_student(deleted_student_number):
@@ -89,7 +94,7 @@ def file_delete_student(deleted_student_number):
             if deleted_student_number not in line:  # If the line doesn't contain the student number, then rewrite it
                 file_object.write(line)  # Writes the line only if the line doesn't contain the student number
                 student_number_checker.append(line)  # Add it to new_student_file list so I can check if it was deleted
-    if deleted_student_number in student_number_checker:  # If
+    if deleted_student_number in student_number_checker:  # If student number in checker, deletion failed
         return False
     else:  # If it's not in the new_student_file, then it was deleted
         return True
@@ -103,14 +108,12 @@ def file_read():
             final_grades = []
             for grades in line.split():  # Split the line into a list of tokens
                 try:
-                    int(grades)
+                    final_grades.append(int(grades))
                 except ValueError:
-                    pass
-                else:
-                    final_grades.append(grades)
+                    continue
             # Append each Student object to student_list by using the indexes in student_line to instantiate
-            student_object = Student(line.split()[0], line.split()[1], line.split()[2], line.split()[3])
-            student_object.set_grades(final_grades)
+            status = True if "True" in line else False
+            student_object = Student(line.split()[0], line.split()[1], line.split()[2], status, final_grades)
             student_list.append(student_object)
     return student_list
 
@@ -122,17 +125,20 @@ def file_write(new_student):
 
 def add_grade():
     student_number = input("Enter the student number: ")
-    with open("students.txt", "r") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
+    with open("students.txt") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
         student_file = file_object.readlines()  # Create a list of each line as a string
+        if student_number not in "".join(student_file):
+            return False
     with open("students.txt", "w") as file_object:
         for line in student_file:
             student_tokens = line.split()  # Create a list, add to list, make it into a string, write it
-            if student_number in line:  # If the line doesn't contain the student number, then rewrite it
-                student_grade = input("Enter the new grade you wish to add: ")
+            if student_number in student_tokens:  # If the line doesn't contain the student number, then rewrite it
+                student_grade = input("Enter the new grade you wish to add (Must be between 0 and 100): ")
                 student_tokens.append(student_grade)
                 file_object.write(" ".join(student_tokens) + "\n")
             else:
                 file_object.write(line)
+        return True
 
 
 def calculate_class_average():
@@ -140,11 +146,10 @@ def calculate_class_average():
     class_gpa = 0  # Acts as a counter to add student GPAs to
     students_with_gpa = 0  # Acts as a counter to count how many students have grades
     for student in student_list:
-        print(student.get_first_name(), student.get_last_name() + "'s GPA is:", student.get_gpa())
         if student.get_gpa() is not None:  # get_gpa() will return None if student object has no grades
             class_gpa += student.get_gpa()  # Add the GPA of each student with a GPA to class_gpa
             students_with_gpa += 1  # Add 1 to students_with_gpa
-    print("The class average is:", round(class_gpa / students_with_gpa, 2))  # Only counts students with a GPA
+    return round(class_gpa / students_with_gpa, 2)  # Only counts students with a GPA
 
 
 def print_class_list():
@@ -180,11 +185,14 @@ def main():
             else:
                 print("Student number must be in the form of A########!")
         elif choice == "3":
-            calculate_class_average()
+            print("The class average is:", calculate_class_average())
         elif choice == "4":
             print_class_list()
         elif choice == "5":
-            add_grade()
+            if add_grade():
+                print("Grade successfully added!")
+            else:
+                print("Student number not found. Returning to menu...")
         elif choice == "6":
             break
         else:
