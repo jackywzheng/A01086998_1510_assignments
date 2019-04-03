@@ -20,7 +20,10 @@ class Student:
             self.__status = status
         else:
             raise ValueError("Status must be True or False")
-        self.__grades = grades
+        if grades is None:
+            self.__grades = []
+        else:
+            self.__grades = grades
 
     # Accessors
     def get_first_name(self):
@@ -57,8 +60,8 @@ class Student:
         self.__last_name = last_name
 
     def print_info(self):
-        print("Name:", self.__first_name, self.__last_name, "Student Number:", self.__student_number,
-              "Status:", self.__status, "Grades:", self.__grades)
+        print("Name:", self.__last_name, ",", self.__first_name, "| Student Number:", self.__student_number,
+              "| Status:", self.__status, "| Grades:", self.__grades)
 
     def __str__(self):
         student_info = self.__first_name + " " + self.__last_name + " " + \
@@ -77,7 +80,8 @@ def add_student():
         grades_list = []
         for each_grade in number_of_grades.split():
             grades_list.append(each_grade)
-        new_student = Student(first_name.strip(), last_name.strip(), student_number.strip(), status, grades_list)
+        new_student = Student(first_name.strip().title(), last_name.strip().title(),
+                              student_number.strip().title(), status, grades_list)
         file_write(new_student)
     except AttributeError:
         print("Error. You did not enter the correct information to add a new student. Returning to menu...")
@@ -119,7 +123,7 @@ def file_read():
 
 
 def file_write(new_student):
-    with open("students.txt", 'a') as file_object:
+    with open('students.txt', 'a') as file_object:
         file_object.write(str(new_student))
 
 

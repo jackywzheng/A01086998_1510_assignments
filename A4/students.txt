@@ -1,4 +1,4 @@
 Jacky Zheng A12345673 True 50 99
 Niki Guo A12345675 True 60 70 80
-me lol A12345674 True 50 99
+Me Lol A12345674 True 50 99
 Yououo ARreee A64646464 True 69
