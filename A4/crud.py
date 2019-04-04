@@ -4,16 +4,72 @@
 # A01086998
 # 03/22/2019
 
-from students import Student
-import doctest
+
+class Student:
+    def __init__(self, first_name: str, last_name: str, student_number: str, status: bool, grades: list = None):
+        if len(first_name) != 0 and len(last_name) != 0:
+            self.__first_name = first_name
+            self.__last_name = last_name
+        else:
+            raise ValueError("Names cannot be empty strings!")
+        if student_number[0] == "A" and student_number[1:9].isdigit() and len(student_number) == 9:
+            self.__student_number = student_number
+        else:
+            raise ValueError("Student number must be in the form of A########!")
+        if status is True or status is False:
+            self.__status = status
+        else:
+            raise ValueError("Status must be True or False")
+        if grades is list:
+            self.__grades = grades
+        else:
+            raise ValueError("Grades must be a list!")
+
+    # Accessors
+    def get_first_name(self):
+        return self.__first_name
+
+    def get_last_name(self):
+        return self.__last_name
+
+    def get_student_number(self):
+        return self.__student_number
+
+    def get_status(self):
+        return self.__status
+
+    def get_grades(self):
+        return self.__grades
+
+    def get_gpa(self):
+        if len(self.__grades) == 0:  # If empty list, then return None
+            return None
+        gpa = 0
+        for grades in self.__grades:
+            gpa += int(grades)
+        return round(gpa / len(self.__grades), 2)  # Else return the GPA
+
+    # Mutators
+    def set_grades(self, grades):
+        self.__grades = grades
+
+    def set_first_name(self, first_name):
+        self.__first_name = first_name
+
+    def set_last_name(self, last_name):
+        self.__last_name = last_name
+
+    def print_info(self):
+        print("Name:", self.__first_name, self.__last_name, "Student Number:", self.__student_number,
+              "Status:", self.__status, "Grades:", self.__grades)
+
+    def __str__(self):
+        student_info = self.__first_name + " " + self.__last_name + " " + \
+                       self.__student_number + " " + str(self.__status) + " " + " ".join(self.__grades) + "\n"
+        return student_info
 
 
 def add_student():
-    """Create a student object and write it to students.txt if input is valid.
-
-    PRECONDITION: User input must follow the Student Class requirements.
-    POSTCONDITION: Instantiate a student object and write it to students.txt
-    """
     first_name = input("Enter the student's first name: ")
     last_name = input("Enter the student's last name: ")
     student_number = input("Enter the student number in the format of (A########): ")
@@ -24,22 +80,13 @@ def add_student():
         grades_list = []
         for each_grade in number_of_grades.split():
             grades_list.append(each_grade)
-        new_student = Student(first_name, last_name, student_number, status, grades_list)
+        new_student = Student(first_name.strip(), last_name.strip(), student_number.strip(), status, grades_list)
         file_write(new_student)
-    except AttributeError:
-        print("Error. You did not enter the correct information to add a new student. Returning to menu...")
+    except AttributeError as e:
+        print(e)
 
 
 def file_delete_student(deleted_student_number):
-    """Return True if student number was found and deleted from students.txt, else return False.
-
-    PARAM: deleted_student_number must be a string
-    PRECONDITION: deleted_student_number must be a string in the form of A########
-    RETURN: True if student number was deleted, False otherwise
-
-    >>> file_delete_student('A0000000000')
-    False
-    """
     student_number_checker = []
     with open("students.txt", "r") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
         student_file = file_object.readlines()  # Create a list of each line as a string
@@ -57,12 +104,6 @@ def file_delete_student(deleted_student_number):
 
 
 def file_read():
-    """Return a list of student objects instantiated from students.txt.
-
-    PRECONDITION: students.txt must be formatted correctly in the form of:
-    Christopher Thompson A12345678 True 90 80 76 100 62 74
-    RETURN: a list of student objects instantiated from students.txt
-    """
     student_list = []
     with open("students.txt") as file_object:
         lines = file_object.readlines()  # Returns a list of lines
@@ -81,22 +122,11 @@ def file_read():
 
 
 def file_write(new_student):
-    """Write a student object to students.txt.
-
-    PARAM: new_student must be a valid student object.
-    PRECONDITION: new_student must be a valid student object.
-    POSTCONDITION: write the student object to students.txt
-    """
-    with open('students.txt', 'a') as file_object:
+    with open("students.txt", 'a') as file_object:
         file_object.write(str(new_student))
 
 
 def add_grade():
-    """Add a grade to a student in students.txt.
-
-    PRECONDITION: input must follow Student Class requirements.
-    RETURN: True if grade was added successfully, else False
-    """
     student_number = input("Enter the student number: ")
     with open("students.txt") as file_object:  # Have to read, and THEN write after. I tried "r+" but didn't work
         student_file = file_object.readlines()  # Create a list of each line as a string
@@ -115,12 +145,6 @@ def add_grade():
 
 
 def calculate_class_average():
-    """Return the class GPA of students.txt (Students without grades are not included in calculation).
-
-    PRECONDITION: students.txt must be formatted correctly in the form of:
-    Christopher Thompson A12345678 True 90 80 76 100 62 74
-    RETURN: the class average rounded to two decimal places
-    """
     student_list = file_read()  # Returns a list of student objects
     class_gpa = 0  # Acts as a counter to add student GPAs to
     students_with_gpa = 0  # Acts as a counter to count how many students have grades
@@ -132,13 +156,6 @@ def calculate_class_average():
 
 
 def print_class_list():
-    """Prints the students in students.txt sorted by last name.
-
-    PRECONDITION: students.txt must be formatted correctly in the form of:
-    Christopher Thompson A12345678 True 90 80 76 100 62 74
-    POSTCONDITION: prints the students in students.txt sorted by last name in the form of:
-    Name: LastName , First Name | Student Number: A######## | Status: False | Grades: []
-    """
     student_list = file_read()  # Returns a list of student objects
     sorting_list = []  # Create empty list for sorting purposes
     for student in student_list:
@@ -150,7 +167,6 @@ def print_class_list():
 
 
 def main():
-    """Drives the program."""
     while True:
         choice = input("1. Add student\n2. Delete student\n3. Calculate class average\n"
                        "4. Print class list (sorted by last name)\n5. Add grade\n6. Quit")
@@ -158,8 +174,8 @@ def main():
             try:
                 add_student()
                 print("Student successfully added!")
-            except ValueError:
-                print("Adding student failed due to invalid input. Returning to menu...")
+            except ValueError as e:
+                print(e)
         elif choice == "2":
             deleted_student_number = input("What is the student number that you wish to delete? ")
             if deleted_student_number[0] == "A" and deleted_student_number[1:9].isdigit() \
@@ -188,4 +204,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    doctest.testmod()
