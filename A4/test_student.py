@@ -5,7 +5,7 @@
 # 03/22/2019
 
 from unittest import TestCase
-from crud import Student
+from students import Student
 import unittest.mock
 import io
 
