@@ -54,3 +54,25 @@ class TestStudent(TestCase):
     def test_reject_status(self):
         with self.assertRaises(ValueError):
             Student("Jacky", "Zheng", "A01086998", "True")
+
+    def test_set_first_name(self):
+        self.test_student.set_first_name("Chris")
+        self.assertEqual(self.test_student.get_first_name(), "Chris")
+
+    def test_set_last_name(self):
+        self.test_student.set_last_name("Thompson")
+        self.assertEqual(self.test_student.get_last_name(), "Thompson")
+
+    def test_set_grades(self):
+        self.test_student.set_grades(['90', '70'])
+        self.assertEqual(self.test_student.get_grades(), ['90', '70'])
+
+    def test_set_status(self):
+        self.test_student.set_status(False)
+        self.assertEqual(self.test_student.get_status(), False)
+
+    @unittest.mock.patch('sys.stdout', new_callable=io.StringIO)
+    def test__str__(self, mock_stdout):
+        expected_output = \
+            "Jacky Zheng A01086998 True 100 90 80\n"
+        self.assertEqual(str(self.test_student), expected_output)
