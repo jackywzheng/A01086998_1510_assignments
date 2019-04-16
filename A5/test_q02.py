@@ -7,15 +7,10 @@ class TestGcd(TestCase):
         self.assertEqual(gcd(10, 25), 5)
 
     def test_negative_and_negative(self):
-        with self.assertRaises(ValueError):
-            gcd(-100, -50)
+        self.assertEqual(gcd(-100, -50), -50)
 
-    def test_negative_and_zero(self):
-        with self.assertRaises(ValueError):
-            gcd(-100, 0)
-
-    def test_zero_and_positive(self):
-        self.assertEqual(gcd(0, 100), 100)
+    def test_negative_and_positive(self):
+        self.assertEqual(gcd(-100, 50), 50)
 
     def test_prime_numbers(self):
         self.assertEqual(gcd(13, 23), 1)
